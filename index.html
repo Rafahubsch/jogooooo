@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostgreSQL 3D Game Show - Loja Primavera</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Three.js para o 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        :root {
+            --neon-pink: #ec4899;
+            --neon-purple: #1e092b;
+            --neon-cyan: #38bdf8;
+            --neon-yellow: #eab308;
+            --neon-green: #22c55e;
+            --neon-red: #ef4444;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevent scrolling, full 3D app */
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #05010a; /* Fallback */
+            color: white;
+        }
+
+        /* 3D Canvas Background */
+        #game-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* UI Layer on top of 3D */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none; /* Let clicks pass to 3D if needed */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Re-enable pointer events for specific UI elements */
+        .interactive-ui {
+            pointer-events: auto;
+        }
+
+        h1, h2, h3, h4, .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        code, pre, .font-fira, input { font-family: 'Fira Code', monospace; }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(15, 5, 24, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        /* Neon Buttons */
+        .btn-neon {
+            position: relative;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 24px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        .btn-neon:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(100%);
+        }
+
+        .btn-neon-pink:not(:disabled):hover {
+            background: var(--neon-pink);
+            box-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink);
+            border-color: var(--neon-pink);
+        }
+
+        .btn-neon-cyan:not(:disabled):hover {
+            background: var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+            border-color: var(--neon-cyan);
+            color: #000;
+        }
+
+        .btn-neon-green:not(:disabled):hover {
+            background: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+            border-color: var(--neon-green);
+        }
+
+        .btn-neon-red:not(:disabled):hover {
+            background: var(--neon-red);
+            box-shadow: 0 0 15px var(--neon-red);
+            border-color: var(--neon-red);
+        }
+
+        /* Custom Input */
+        .terminal-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 12px 16px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            outline: none;
+            box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.2);
+            transition: 0.3s;
+        }
+        .terminal-input:focus {
+            box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.5), 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .hidden { display: none !important; }
+
+        /* Animations */
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 10px currentColor; }
+            50% { box-shadow: 0 0 30px currentColor, inset 0 0 10px currentColor; }
+            100% { box-shadow: 0 0 10px currentColor; }
+        }
+        .animate-glow {
+            animation: pulse-glow 2s infinite;
+        }
+
+        /* Scoreboard Table */
+        .score-row {
+            transition: all 0.3s ease;
+        }
+        .score-row.active-turn {
+            background: rgba(255,255,255,0.15);
+            border-left: 4px solid var(--neon-cyan);
+            transform: scale(1.02);
+        }
+        
+        #confetti-canvas {
+            position: absolute;
+            top:0; left:0; width:100%; height:100%;
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 3D Canvas -->
+    <canvas id="game-canvas"></canvas>
+    
+    <!-- Confetti -->
+    <canvas id="confetti-canvas" class="hidden"></canvas>
+
+    <!-- UI Layer -->
+    <div id="ui-layer">
+        
+        <!-- TOP BAR: Header & Scoreboard -->
+        <div class="w-full flex justify-between items-start p-4 md:p-6 interactive-ui">
+            <!-- Header -->
+            <div class="glass-panel px-6 py-3 rounded-2xl border-t-2 border-pink-500 max-w-sm">
+                <h1 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-400 font-orbitron drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]">
+                    GAME SHOW
+                </h1>
+                <p class="text-xs md:text-sm text-pink-200 tracking-widest uppercase">PostgreSQL Edition</p>
+            </div>
+
+            <!-- Scoreboard -->
+            <div class="glass-panel p-4 rounded-xl border border-white/10 min-w-[250px]">
+                <h3 class="text-center font-orbitron text-sm text-gray-300 mb-3 tracking-widest border-b border-gray-600 pb-2">RANKING (PONTOS)</h3>
+                <div id="scoreboard-list" class="flex flex-col gap-2">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- CENTER START SCREEN (Overlay) -->
+        <div id="start-screen" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/40 backdrop-blur-sm z-50">
+            <div class="glass-panel p-8 md:p-12 rounded-3xl text-center max-w-2xl border border-pink-500 shadow-[0_0_50px_rgba(236,72,153,0.4)]">
+                <h2 class="text-5xl md:text-7xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-pink-600 mb-6 drop-shadow-[0_0_20px_rgba(236,72,153,0.9)]">
+                    GAME SHOW
+                </h2>
+                <p class="text-lg text-pink-100 mb-8 font-light tracking-wide">
+                    O tabuleiro holográfico está pronto. Responda aos desafios técnicos e mostre quem domina o banco de dados!
+                </p>
+                <button onclick="startGame()" class="btn-neon btn-neon-pink text-xl px-12 py-4 animate-glow text-pink-400 font-black tracking-widest">
+                    INICIAR SIMULAÇÃO
+                </button>
+            </div>
+        </div>
+
+        <!-- CENTER CHALLENGE MODAL (Hidden by default) -->
+        <div id="challenge-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/70 backdrop-blur-md z-40 hidden">
+            <div class="glass-panel p-8 rounded-2xl max-w-3xl w-full mx-4 border-2 border-cyan-500 shadow-[0_0_30px_rgba(56,189,248,0.3)] transform transition-transform scale-95" id="challenge-box">
+                
+                <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                    <span class="text-cyan-400 font-orbitron font-bold text-lg" id="challenge-team-name">Equipe X</span>
+                    <span class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded text-sm font-fira border border-yellow-500/50">Valendo: <span id="challenge-points">100</span> pts</span>
+                </div>
+
+                <h3 class="text-xl md:text-3xl font-semibold mb-8 leading-relaxed" id="challenge-question">
+                    Carregando desafio...
+                </h3>
+
+                <!-- Input mode -->
+                <div id="input-mode-container" class="hidden space-y-4">
+                    <p class="text-sm text-gray-400 font-fira mb-2">Digite o comando ou palavra-chave exata:</p>
+                    <input type="text" id="challenge-input" class="terminal-input" placeholder="ex: COMMIT;" autocomplete="off" spellcheck="false">
+                    <div class="flex justify-end gap-4 mt-6">
+                        <button onclick="useHint()" id="btn-hint" class="btn-neon text-yellow-400 border-yellow-500/50 hover:bg-yellow-500/20 text-sm">💡 Dica (-40pts)</button>
+                        <button onclick="submitInputAnswer()" class="btn-neon btn-neon-cyan">EXECUTAR</button>
+                    </div>
+                </div>
+
+                <!-- True/False mode -->
+                <div id="tf-mode-container" class="hidden space-y-4">
+                    <div class="grid grid-cols-2 gap-6 mt-6">
+                        <button onclick="submitTFAnswer(true)" class="btn-neon btn-neon-green text-xl py-6">VERDADEIRO</button>
+                        <button onclick="submitTFAnswer(false)" class="btn-neon btn-neon-red text-xl py-6">FALSO</button>
+                    </div>
+                </div>
+
+                <!-- Hint Text -->
+                <div id="hint-display" class="hidden mt-6 p-4 bg-yellow-900/30 border border-yellow-500/50 rounded-lg text-yellow-200 text-sm font-fira">
+                </div>
+
+                <!-- Result Feedback -->
+                <div id="result-feedback" class="hidden mt-6 text-center p-6 rounded-lg font-bold text-2xl font-orbitron border-2">
+                    <!-- Injected via JS -->
+                </div>
+                
+                <div id="btn-continue" class="hidden mt-6 text-center">
+                    <button onclick="endTurn()" class="btn-neon btn-neon-pink w-full">CONTINUAR ➔</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENDGAME MODAL (Hidden by default) -->
+        <div id="endgame-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/80 backdrop-blur-lg z-50 hidden">
+            <div class="glass-panel p-10 rounded-3xl text-center max-w-2xl border-2 border-yellow-500 shadow-[0_0_50px_rgba(234,179,8,0.5)]">
+                <h2 class="text-5xl font-orbitron font-bold text-yellow-400 mb-2 drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]">FIM DA SIMULAÇÃO</h2>
+                <p class="text-xl text-gray-300 mb-8">Todas as transações foram processadas.</p>
+                
+                <h3 class="text-3xl font-bold text-white mb-6">Equipe Campeã:</h3>
+                <div id="winner-name" class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 font-orbitron mb-8 py-2">
+                    NOME DA EQUIPE
+                </div>
+
+                <div class="bg-black/50 p-6 rounded-xl border border-white/20 mb-8">
+                    <p class="text-gray-400 font-orbitron mb-2">Pontuação Final</p>
+                    <p id="winner-score" class="text-5xl font-bold text-yellow-400">0</p>
+                </div>
+
+                <button onclick="location.reload()" class="btn-neon btn-neon-cyan">JOGAR NOVAMENTE</button>
+            </div>
+        </div>
+
+        <!-- BOTTOM BAR: Controls -->
+        <div class="w-full p-6 interactive-ui flex flex-col md:flex-row justify-center items-center gap-6 bg-gradient-to-t from-black/80 to-transparent pb-8">
+            <div id="turn-indicator" class="hidden text-center md:text-right">
+                <p class="text-gray-400 text-sm font-orbitron uppercase">Vez da Equipe</p>
+                <p id="current-team-display" class="text-2xl md:text-3xl font-bold font-orbitron" style="color: var(--neon-cyan)">Equipe X</p>
+            </div>
+            
+            <button id="btn-roll-dice" onclick="rollDice()" class="hidden btn-neon btn-neon-pink px-8 py-4 text-xl shadow-[0_0_15px_rgba(236,72,153,0.5)]">
+                🎲 ROLAR DADO (1-3)
+            </button>
+
+            <div id="dice-result" class="hidden text-3xl font-bold font-orbitron bg-white/10 px-6 py-3 rounded-xl border border-white/20">
+                -
+            </div>
+        </div>
+    </div>
+
+    <!-- AUDIO ENGINE & GAME LOGIC -->
+    <script>
+        // --- DATA & CONTENT ---
+        const teamsData = [
+            { id: 0, name: '🟢 Data Savers', color: 0x22c55e, hex: '#22c55e', score: 0, pos: 0 },
+            { id: 1, name: '🔵 Commit Clan', color: 0x3b82f6, hex: '#3b82f6', score: 0, pos: 0 },
+            { id: 2, name: '🟡 Rollback Rollers', color: 0xeab308, hex: '#eab308', score: 0, pos: 0 },
+            { id: 3, name: '🔴 Savepoint Squad', color: 0xef4444, hex: '#ef4444', score: 0, pos: 0 },
+            { id: 4, name: '👑 Mestres DB', color: 0xa855f7, hex: '#a855f7', score: 0, pos: 0 }
+        ];
+
+        // Content carefully extracted from the provided text
+        const challenges = [
+            {
+                type: 'input',
+                q: "Qual comando INICIA uma transação no banco (começa o 'rascunho')?",
+                answer: ["begin", "begin;"],
+                hint: "Começa com a letra B. Significa 'início' em inglês."
+            },
+            {
+                type: 'input',
+                q: "Qual comando CONFIRMA a transação e salva os dados definitivamente?",
+                answer: ["commit", "commit;"],
+                hint: "Começa com a letra C. Depois dele, não tem mais volta."
+            },
+            {
+                type: 'input',
+                q: "Qual comando CANCELA a transação e joga o 'rascunho' fora?",
+                answer: ["rollback", "rollback;"],
+                hint: "Significa 'rolar de volta' para o estado anterior."
+            },
+            {
+                type: 'input',
+                q: "Qual comando cria um PONTO DE SALVAMENTO intermediário durante a transação?",
+                answer: ["savepoint", "savepoint;"],
+                hint: "É a junção das palavras 'salvar' e 'ponto' em inglês."
+            },
+            {
+                type: 'input',
+                q: "Qual ferramenta usamos no terminal (psql) para importar ou exportar dados de uma planilha/arquivo de texto?",
+                answer: ["\\copy", "copy", "\\copy;", "copy;"],
+                hint: "Significa 'copiar' em inglês. No terminal, usamos com uma contrabarra (\\) antes."
+            },
+            {
+                type: 'input',
+                q: "Qual comando faz o BACKUP (exportação) de um banco de dados inteiro?",
+                answer: ["pg_dump", "pg dump"],
+                hint: "Tem o prefixo 'pg_' e a palavra 'despejar' (dump) em inglês."
+            },
+            {
+                type: 'tf',
+                q: "O comando COMMIT pode ser desfeito usando o comando ROLLBACK logo em seguida.",
+                answer: false,
+                hint: "Pense bem: o que significa tornar algo 'definitivo' e 'durável'?"
+            },
+            {
+                type: 'tf',
+                q: "Se um cartão for recusado ao final de um pedido, o comando ROLLBACK garante que o item devolvido volte para o estoque (atomicidade).",
+                answer: true,
+                hint: "A transação garante que é 'tudo ou nada'."
+            },
+            {
+                type: 'tf',
+                q: "O comando ROLLBACK TO desfaz apenas até o ponto de salvamento escolhido, mantendo os itens que já tinham dado certo antes.",
+                answer: true,
+                hint: "Essa é exatamente a principal vantagem de usar pontos de salvamento em transações longas."
+            },
+            {
+                type: 'input',
+                q: "Qual comando RESTAURA um backup criado no formato customizado ou diretório?",
+                answer: ["pg_restore", "pg restore"],
+                hint: "Tem o prefixo 'pg_' e a palavra 'restaurar' em inglês."
+            },
+            {
+                type: 'tf',
+                q: "Arquivos CSV são muito pesados e só podem ser abertos por programas específicos de banco de dados.",
+                answer: false,
+                hint: "Lembre-se: CSV é apenas texto simples separado por vírgulas."
+            },
+            {
+                type: 'input',
+                q: "Qual a sigla do arquivo de texto simples usado para trocar dados, onde os valores são separados por vírgula?",
+                answer: ["csv", ".csv"],
+                hint: "São apenas 3 letras (Comma-Separated Values)."
+            }
+        ];
+
+        let shuffledChallenges = [...challenges].sort(() => Math.random() - 0.5);
+
+        // --- GAME STATE ---
+        const BOARD_SIZE = 25; // number of tiles
+        let currentTeamIndex = 0;
+        let isMoving = false;
+        let currentChallenge = null;
+        let currentPointsVal = 100;
+        let boardPath = []; // Array of Vector3 positions for tiles
+
+        // --- WEB AUDIO API ---
+        let audioCtx;
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+        function playSound(type) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+            
+            if (type === 'roll') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(600, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.2);
+                osc.start(now); osc.stop(now + 0.2);
+            } else if (type === 'move') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
+            } else if (type === 'correct') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.setValueAtTime(554, now + 0.1);
+                osc.frequency.setValueAtTime(659, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start(now); osc.stop(now + 0.4);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(80, now + 0.3);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now); osc.stop(now + 0.3);
+            } else if (type === 'win') {
+                osc.type = 'sine';
+                [523, 659, 783, 1046].forEach((f, i) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.type = 'square'; o.frequency.value = f;
+                    o.connect(g); g.connect(audioCtx.destination);
+                    g.gain.setValueAtTime(0, now + i*0.1);
+                    g.gain.linearRampToValueAtTime(0.1, now + i*0.1 + 0.05);
+                    g.gain.exponentialRampToValueAtTime(0.01, now + i*0.1 + 0.5);
+                    o.start(now + i*0.1); o.stop(now + i*0.1 + 0.5);
+                });
+            }
+        }
+
+        // --- THREE.JS SETUP ---
+        let scene, camera, renderer;
+        let pieceMeshes = [];
+        let galaxy; // Referência para a galáxia 3D
+
+        function init3D() {
+            const canvas = document.getElementById('game-canvas');
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x10001a, 0.015); // Tom mais puxado pro roxo/rosa escuro
+
+            // Camera (Isometric-ish perspective)
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 30, 40);
+            camera.lookAt(0, 0, 0);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Lights
+            const ambient = new THREE.AmbientLight(0xffffff, 0.2);
+            scene.add(ambient);
+            const pLight1 = new THREE.PointLight(0xec4899, 1, 100);
+            pLight1.position.set(-10, 20, 10);
+            scene.add(pLight1);
+            const pLight2 = new THREE.PointLight(0x38bdf8, 1, 100);
+            pLight2.position.set(10, 20, -10);
+            scene.add(pLight2);
+
+            buildBoard();
+            buildPieces();
+            createGalaxy(); // Substituindo estrelas por galáxia
+
+            window.addEventListener('resize', onWindowResize, false);
+            animate3D();
+        }
+
+        function buildBoard() {
+            // Generate an S-curve path
+            const tileGeo = new THREE.BoxGeometry(3, 0.5, 3);
+            
+            let cx = -15, cz = -15;
+            let dirX = 1;
+            
+            for (let i = 0; i < BOARD_SIZE; i++) {
+                boardPath.push(new THREE.Vector3(cx, 0, cz));
+                
+                // Determine color (Start, End, Default)
+                let color = 0x1e3a8a; // Dark blue
+                let emissive = 0x000000;
+                if (i === 0) { color = 0x22c55e; emissive = 0x116633; } // Start green
+                else if (i === BOARD_SIZE - 1) { color = 0xeab308; emissive = 0x886600; } // End gold
+                else if (i % 2 === 0) { color = 0x4a044e; emissive = 0x220022; } // Alt purple
+
+                const mat = new THREE.MeshStandardMaterial({ 
+                    color: color, 
+                    emissive: emissive,
+                    roughness: 0.2,
+                    metalness: 0.8
+                });
+                
+                const tile = new THREE.Mesh(tileGeo, mat);
+                tile.position.copy(boardPath[i]);
+                
+                // Add number label (simple visual representation via smaller box for now, keeping it lightweight)
+                const innerGeo = new THREE.BoxGeometry(2, 0.6, 2);
+                const innerMat = new THREE.MeshStandardMaterial({ color: 0x000000 });
+                const innerTile = new THREE.Mesh(innerGeo, innerMat);
+                innerTile.position.copy(boardPath[i]);
+                
+                scene.add(tile);
+                scene.add(innerTile);
+
+                // Path logic
+                if (dirX === 1) {
+                    cx += 4;
+                    if (cx > 15) { dirX = 0; cz += 4; }
+                } else if (dirX === 0) {
+                    dirX = -1; cz += 4;
+                } else if (dirX === -1) {
+                    cx -= 4;
+                    if (cx < -15) { dirX = 2; cz += 4; }
+                } else if (dirX === 2) {
+                    dirX = 1; cz += 4;
+                }
+            }
+        }
+
+        function buildPieces() {
+            const pieceGeo = new THREE.ConeGeometry(0.8, 2.5, 16);
+            pieceGeo.translate(0, 1.25, 0); // pivot at bottom
+
+            teamsData.forEach((team, idx) => {
+                const mat = new THREE.MeshStandardMaterial({ 
+                    color: team.color,
+                    emissive: team.color,
+                    emissiveIntensity: 0.5,
+                    roughness: 0.2
+                });
+                const mesh = new THREE.Mesh(pieceGeo, mat);
+                
+                // Position pieces slightly offset so they don't overlap completely
+                const offset = getPieceOffset(idx);
+                const startPos = boardPath[0].clone().add(offset);
+                mesh.position.copy(startPos);
+                
+                scene.add(mesh);
+                pieceMeshes.push(mesh);
+            });
+        }
+
+        function getPieceOffset(index) {
+            // Circle arrangement
+            const angle = (index / 5) * Math.PI * 2;
+            const radius = 0.8;
+            return new THREE.Vector3(Math.cos(angle) * radius, 0.3, Math.sin(angle) * radius);
+        }
+
+        function createGalaxy() {
+            const particleCount = 6000;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            
+            const colorPink = new THREE.Color(0xec4899);
+            const colorPurple = new THREE.Color(0xa855f7);
+            const colorLightPink = new THREE.Color(0xfbcfe8);
+            
+            for(let i = 0; i < particleCount; i++) {
+                // Lógica para criar braços em espiral
+                const r = Math.random() * 90; // Raio da galáxia
+                const branch = i % 4; // 4 braços em espiral
+                const theta = (branch * ((Math.PI * 2) / 4)) + (r * 0.05) + (Math.random() * 0.8 - 0.4);
+                
+                const x = Math.cos(theta) * r;
+                const y = (Math.random() - 0.5) * 12 * (1 - r/100); // Mais achatado nas bordas
+                const z = Math.sin(theta) * r;
+                
+                pos[i*3] = x;
+                pos[i*3+1] = y - 10; // Abaixar um pouco a galáxia
+                pos[i*3+2] = z - 20;
+
+                // Mistura as cores rosa, roxo e rosa claro
+                const mixedColor = colorPink.clone().lerp(Math.random() > 0.5 ? colorPurple : colorLightPink, Math.random());
+                colors[i*3] = mixedColor.r;
+                colors[i*3+1] = mixedColor.g;
+                colors[i*3+2] = mixedColor.b;
+            }
+            
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const mat = new THREE.PointsMaterial({ 
+                size: 0.35, 
+                vertexColors: true, 
+                transparent: true, 
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending 
+            });
+            
+            galaxy = new THREE.Points(geo, mat);
+            galaxy.rotation.x = Math.PI / 8; // Inclina a galáxia para visualização 3D melhor
+            scene.add(galaxy);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+            
+            // Rotação suave da Galáxia Espiral
+            if (galaxy) {
+                galaxy.rotation.y += 0.0015;
+            }
+            
+            // Make active player's piece hover/spin
+            if (!isMoving) {
+                pieceMeshes.forEach((mesh, idx) => {
+                    const offset = getPieceOffset(idx);
+                    const targetPos = boardPath[teamsData[idx].pos].clone().add(offset);
+                    
+                    if (idx === currentTeamIndex) {
+                        mesh.rotation.y += 0.05;
+                        mesh.position.y = targetPos.y + 0.5 + Math.sin(Date.now() * 0.005) * 0.3;
+                    } else {
+                        mesh.rotation.y = 0;
+                        mesh.position.y = targetPos.y;
+                    }
+                    mesh.position.x = targetPos.x;
+                    mesh.position.z = targetPos.z;
+                });
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // --- GAME LOGIC ---
+
+        function updateScoreboard() {
+            const list = document.getElementById('scoreboard-list');
+            list.innerHTML = '';
+            
+            // Sort by score, then by pos
+            const sortedTeams = [...teamsData].sort((a, b) => {
+                if (b.score === a.score) return b.pos - a.pos;
+                return b.score - a.score;
+            });
+
+            sortedTeams.forEach((t, i) => {
+                const isCurrent = t.id === currentTeamIndex;
+                const html = `
+                    <div class="score-row flex justify-between items-center p-2 rounded ${isCurrent ? 'active-turn' : ''}">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-gray-500 w-4">${i+1}º</span>
+                            <div class="w-3 h-3 rounded-full" style="background-color: ${t.hex}; box-shadow: 0 0 5px ${t.hex}"></div>
+                            <span class="text-sm font-semibold truncate w-24 md:w-32" style="${isCurrent ? 'color: white' : 'color: #ccc'}">${t.name}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-gray-400">P:${t.pos}</span>
+                            <span class="ml-2 font-bold font-fira text-yellow-400">${t.score}</span>
+                        </div>
+                    </div>
+                `;
+                list.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        function startGame() {
+            initAudio();
+            document.getElementById('start-screen').classList.add('hidden');
+            
+            document.getElementById('turn-indicator').classList.remove('hidden');
+            document.getElementById('btn-roll-dice').classList.remove('hidden');
+            document.getElementById('dice-result').classList.remove('hidden');
+            
+            updateScoreboard();
+            updateTurnUI();
+        }
+
+        function updateTurnUI() {
+            const team = teamsData[currentTeamIndex];
+            const display = document.getElementById('current-team-display');
+            display.innerText = team.name;
+            display.style.color = team.hex;
+            display.style.textShadow = `0 0 10px ${team.hex}`;
+            
+            document.getElementById('btn-roll-dice').disabled = false;
+            document.getElementById('dice-result').innerText = "-";
+            updateScoreboard();
+        }
+
+        function rollDice() {
+            initAudio();
+            document.getElementById('btn-roll-dice').disabled = true;
+            
+            let rolls = 0;
+            const maxRolls = 10;
+            const resultBox = document.getElementById('dice-result');
+            
+            const rollInterval = setInterval(() => {
+                playSound('roll');
+                const tempVal = Math.floor(Math.random() * 3) + 1;
+                resultBox.innerText = tempVal;
+                rolls++;
+                
+                if (rolls >= maxRolls) {
+                    clearInterval(rollInterval);
+                    const finalRoll = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
+                    resultBox.innerText = finalRoll;
+                    resultBox.style.color = 'var(--neon-yellow)';
+                    resultBox.style.borderColor = 'var(--neon-yellow)';
+                    
+                    setTimeout(() => movePiece(finalRoll), 500);
+                }
+            }, 100);
+        }
+
+        function movePiece(steps) {
+            isMoving = true;
+            const team = teamsData[currentTeamIndex];
+            const mesh = pieceMeshes[currentTeamIndex];
+            let currentStep = 0;
+
+            function stepAnimation() {
+                if (currentStep < steps && team.pos < BOARD_SIZE - 1) {
+                    team.pos++;
+                    playSound('move');
+                    
+                    const offset = getPieceOffset(currentTeamIndex);
+                    const target = boardPath[team.pos].clone().add(offset);
+                    
+                    // Simple animation (jump)
+                    const dur = 400; // ms
+                    const startT = Date.now();
+                    const startPos = mesh.position.clone();
+                    
+                    function animFrame() {
+                        const t = (Date.now() - startT) / dur;
+                        if (t < 1) {
+                            mesh.position.lerpVectors(startPos, target, t);
+                            // Arch parabola
+                            mesh.position.y += Math.sin(t * Math.PI) * 2;
+                            requestAnimationFrame(animFrame);
+                        } else {
+                            mesh.position.copy(target);
+                            currentStep++;
+                            setTimeout(stepAnimation, 100);
+                        }
+                    }
+                    animFrame();
+                } else {
+                    isMoving = false;
+                    updateScoreboard();
+                    
+                    if (team.pos >= BOARD_SIZE - 1) {
+                        // Reached the end! Extra points and check win
+                        team.score += 500;
+                        setTimeout(triggerEndGame, 1000);
+                    } else {
+                        setTimeout(triggerChallenge, 500);
+                    }
+                }
+            }
+            stepAnimation();
+        }
+
+        function triggerChallenge() {
+            // Get a question, recycle if empty
+            if (shuffledChallenges.length === 0) {
+                shuffledChallenges = [...challenges].sort(() => Math.random() - 0.5);
+            }
+            currentChallenge = shuffledChallenges.pop();
+            currentPointsVal = 100;
+            
+            const team = teamsData[currentTeamIndex];
+            document.getElementById('challenge-team-name').innerText = team.name;
+            document.getElementById('challenge-team-name').style.color = team.hex;
+            document.getElementById('challenge-points').innerText = currentPointsVal;
+            document.getElementById('challenge-question').innerText = currentChallenge.q;
+            
+            // Reset UI
+            document.getElementById('hint-display').classList.add('hidden');
+            document.getElementById('result-feedback').classList.add('hidden');
+            document.getElementById('btn-continue').classList.add('hidden');
+            document.getElementById('btn-hint').disabled = false;
+            document.getElementById('btn-hint').classList.remove('opacity-50');
+            
+            const inputContainer = document.getElementById('input-mode-container');
+            const tfContainer = document.getElementById('tf-mode-container');
+            const box = document.getElementById('challenge-box');
+            box.classList.remove('border-green-500', 'border-red-500');
+            box.classList.add('border-cyan-500');
+            
+            if (currentChallenge.type === 'input') {
+                inputContainer.classList.remove('hidden');
+                tfContainer.classList.add('hidden');
+                const inp = document.getElementById('challenge-input');
+                inp.value = '';
+                inp.disabled = false;
+                setTimeout(() => inp.focus(), 100);
+            } else {
+                inputContainer.classList.add('hidden');
+                tfContainer.classList.remove('hidden');
+            }
+
+            // Show Modal
+            const modal = document.getElementById('challenge-modal');
+            modal.classList.remove('hidden');
+            // Pop effect
+            setTimeout(() => { box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 10);
+        }
+
+        function useHint() {
+            if (document.getElementById('btn-hint').disabled) return;
+            
+            currentPointsVal = Math.max(20, currentPointsVal - 40);
+            document.getElementById('challenge-points').innerText = currentPointsVal;
+            
+            const hintBox = document.getElementById('hint-display');
+            hintBox.innerText = "💡 DICA: " + currentChallenge.hint;
+            hintBox.classList.remove('hidden');
+            
+            document.getElementById('btn-hint').disabled = true;
+            document.getElementById('btn-hint').classList.add('opacity-50');
+        }
+
+        function submitInputAnswer() {
+            const inp = document.getElementById('challenge-input');
+            const userAns = inp.value.trim().toLowerCase().replace(/\s+/g, ' '); // normalize spaces
+            if (!userAns) return;
+            
+            inp.disabled = true;
+            
+            // Check against array of valid answers
+            // Convert to lowercase and trim for comparison
+            const isCorrect = currentChallenge.answer.some(ans => 
+                userAns === ans.toLowerCase() || 
+                userAns === ans.toLowerCase() + ";" ||
+                userAns + ";" === ans.toLowerCase()
+            );
+
+            showResult(isCorrect, currentChallenge.answer[0].toUpperCase());
+        }
+
+        function submitTFAnswer(userChoice) {
+            const isCorrect = (userChoice === currentChallenge.answer);
+            showResult(isCorrect, currentChallenge.answer ? "VERDADEIRO" : "FALSO");
+        }
+
+        function showResult(isCorrect, correctAnswerText) {
+            document.getElementById('input-mode-container').classList.add('hidden');
+            document.getElementById('tf-mode-container').classList.add('hidden');
+            
+            const feedback = document.getElementById('result-feedback');
+            feedback.classList.remove('hidden');
+            
+            const box = document.getElementById('challenge-box');
+            box.classList.remove('border-cyan-500');
+            
+            if (isCorrect) {
+                playSound('correct');
+                feedback.innerHTML = `ACESSO PERMITIDO!<br><span class="text-sm font-light">Resposta Correta (+${currentPointsVal} pts)</span>`;
+                feedback.className = "mt-6 text-center p-6 rounded-lg font-bold text-2xl font-orbitron border-2 border-green-500 bg-green-900/30 text-green-400";
+                box.classList.add('border-green-500');
+                
+                teamsData[currentTeamIndex].score += currentPointsVal;
+            } else {
+                playSound('wrong');
+                feedback.innerHTML = `SINTAXE INVÁLIDA!<br><span class="text-sm font-light">Correto era: <span class="font-fira">${correctAnswerText}</span> (-30 pts)</span>`;
+                feedback.className = "mt-6 text-center p-6 rounded-lg font-bold text-2xl font-orbitron border-2 border-red-500 bg-red-900/30 text-red-400";
+                box.classList.add('border-red-500');
+                
+                teamsData[currentTeamIndex].score = Math.max(0, teamsData[currentTeamIndex].score - 30);
+            }
+            
+            updateScoreboard();
+            document.getElementById('btn-continue').classList.remove('hidden');
+        }
+
+        function endTurn() {
+            const box = document.getElementById('challenge-box');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            
+            setTimeout(() => {
+                document.getElementById('challenge-modal').classList.add('hidden');
+                
+                // Next team
+                currentTeamIndex = (currentTeamIndex + 1) % teamsData.length;
+                updateTurnUI();
+                
+                // Reset Dice visual
+                const resultBox = document.getElementById('dice-result');
+                resultBox.style.color = 'white';
+                resultBox.style.borderColor = 'rgba(255,255,255,0.2)';
+                
+            }, 300);
+        }
+
+        function triggerEndGame() {
+            playSound('win');
+            
+            // Find highest score
+            let winner = teamsData[0];
+            teamsData.forEach(t => {
+                if (t.score > winner.score) winner = t;
+            });
+
+            document.getElementById('winner-name').innerText = winner.name;
+            document.getElementById('winner-score').innerText = winner.score;
+            
+            document.getElementById('endgame-modal').classList.remove('hidden');
+            
+            document.getElementById('confetti-canvas').classList.remove('hidden');
+            startConfetti();
+        }
+
+        // --- CONFETTI SYSTEM ---
+        const cCanvas = document.getElementById('confetti-canvas');
+        const ctx = cCanvas.getContext('2d');
+        let confettiParticles = [];
+        let cAnimId = null;
+
+        function resizeConfetti() {
+            cCanvas.width = window.innerWidth;
+            cCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeConfetti);
+        resizeConfetti();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * cCanvas.width;
+                this.y = Math.random() * cCanvas.height - cCanvas.height;
+                this.w = Math.random() * 10 + 5;
+                this.h = Math.random() * 5 + 5;
+                this.color = ['#ec4899', '#38bdf8', '#eab308', '#22c55e'][Math.floor(Math.random() * 4)];
+                this.speed = Math.random() * 3 + 2;
+                this.angle = Math.random() * 360;
+                this.spin = Math.random() * 0.2 - 0.1;
+            }
+            update() {
+                this.y += this.speed;
+                this.angle += this.spin;
+                if (this.y > cCanvas.height) {
+                    this.y = -10;
+                    this.x = Math.random() * cCanvas.width;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
+                ctx.restore();
+            }
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+            confettiParticles.forEach(p => { p.update(); p.draw(); });
+            cAnimId = requestAnimationFrame(animateConfetti);
+        }
+
+        function startConfetti() {
+            for (let i = 0; i < 150; i++) confettiParticles.push(new Particle());
+            if (!cAnimId) animateConfetti();
+        }
+
+        // Initialize 3D Scene on load
+        window.onload = init3D;
+
+        // Add Enter key support for input
+        document.getElementById('challenge-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') submitInputAnswer();
+        });
+
+    </script>
+</body>
+</html>
