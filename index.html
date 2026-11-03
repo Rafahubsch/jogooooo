@@ -31,16 +31,8 @@
             height: 100%;
             overflow: hidden; /* Full screen 3D app */
             font-family: 'Rajdhani', sans-serif;
-            background: linear-gradient(135deg, #05010a 0%, #150024 50%, #030816 100%);
-            background-size: 200% 200%;
-            animation: gradientBG 15s ease infinite;
+            background: radial-gradient(circle at center, #0f051d 0%, #05010a 70%, #000000 100%);
             color: white;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         /* 3D Canvas Background */
@@ -75,16 +67,16 @@
         h1, h2, h3, h4, .font-orbitron { font-family: 'Orbitron', sans-serif; }
         code, pre, .font-fira, input { font-family: 'Fira Code', monospace; }
 
-        /* Glassmorphism */
+        /* Premium Cyber-Glassmorphism */
         .glass-panel {
-            background: rgba(10, 4, 18, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.7);
+            background: rgba(12, 6, 24, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(56, 189, 248, 0.05);
         }
 
-        /* Neon Buttons */
+        /* Cyber Neon Buttons */
         .btn-neon {
             position: relative;
             display: inline-flex;
@@ -95,72 +87,77 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             text-decoration: none;
-            font-size: 16px;
-            font-weight: bold;
-            transition: 0.3s;
-            background: rgba(255, 255, 255, 0.05);
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.2s ease-in-out;
+            background: rgba(20, 10, 35, 0.7);
             border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-family: 'Orbitron', sans-serif;
-            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+            text-shadow: 0 0 8px rgba(255,255,255,0.6);
         }
 
         .btn-neon:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
             filter: grayscale(100%);
         }
 
         .btn-neon-pink:not(:disabled):hover {
-            background: var(--neon-pink);
-            box-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink);
-            border-color: var(--neon-pink);
+            background: #ec4899;
+            box-shadow: 0 0 25px rgba(236,72,153,0.8);
+            border-color: #ec4899;
+            transform: translateY(-2px);
         }
 
         .btn-neon-cyan:not(:disabled):hover {
-            background: var(--neon-cyan);
-            box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan);
-            border-color: var(--neon-cyan);
+            background: #38bdf8;
+            box-shadow: 0 0 25px rgba(56,189,248,0.8);
+            border-color: #38bdf8;
             color: #000;
+            transform: translateY(-2px);
         }
 
         .btn-neon-green:not(:disabled):hover {
-            background: var(--neon-green);
-            box-shadow: 0 0 15px var(--neon-green);
-            border-color: var(--neon-green);
+            background: #22c55e;
+            box-shadow: 0 0 25px rgba(34,197,94,0.8);
+            border-color: #22c55e;
+            transform: translateY(-2px);
         }
 
         .btn-neon-red:not(:disabled):hover {
-            background: var(--neon-red);
-            box-shadow: 0 0 15px var(--neon-red);
-            border-color: var(--neon-red);
+            background: #ef4444;
+            box-shadow: 0 0 25px rgba(239,68,68,0.8);
+            border-color: #ef4444;
+            transform: translateY(-2px);
         }
 
-        /* Custom Input */
+        /* Custom Terminal Input */
         .terminal-input {
             width: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            padding: 12px 16px;
-            font-size: 1.2rem;
-            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.75);
+            border: 2px solid #38bdf8;
+            color: #38bdf8;
+            padding: 14px 18px;
+            font-size: 1.1rem;
+            border-radius: 12px;
             outline: none;
-            box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.2);
-            transition: 0.3s;
+            box-shadow: inset 0 0 12px rgba(56, 189, 248, 0.3);
+            transition: all 0.3s;
         }
         .terminal-input:focus {
-            box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.5), 0 0 15px rgba(56, 189, 248, 0.4);
+            box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.6), 0 0 20px rgba(56, 189, 248, 0.5);
+            border-color: #7dd3fc;
         }
 
         .hidden { display: none !important; }
 
         /* Animations */
         @keyframes pulse-glow {
-            0% { box-shadow: 0 0 10px currentColor; }
-            50% { box-shadow: 0 0 30px currentColor, inset 0 0 10px currentColor; }
-            100% { box-shadow: 0 0 10px currentColor; }
+            0% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(236, 72, 153, 0.9); }
+            100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.4); }
         }
         .animate-glow {
             animation: pulse-glow 2s infinite;
@@ -168,52 +165,41 @@
 
         /* Trap Shake Effect */
         @keyframes shake {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            10%, 30%, 50%, 70%, 90% { transform: translate(-8px, 4px) rotate(-1deg); }
-            20%, 40%, 60%, 80% { transform: translate(8px, -4px) rotate(1deg); }
+            0%, 100% { transform: translate(0, 0); }
+            20%, 60% { transform: translate(-6px, 3px); }
+            40%, 80% { transform: translate(6px, -3px); }
         }
         .animate-shake {
-            animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+            animation: shake 0.4s ease-in-out both;
         }
 
         /* Glitch Effect for Wrong Answers */
         @keyframes glitchRed {
-            0% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.8), inset 0 0 15px rgba(239, 68, 68, 0.5); }
-            20% { transform: translate(-4px, 2px); }
-            40% { transform: translate(4px, -2px); }
-            60% { transform: translate(-2px, -3px); }
-            80% { transform: translate(3px, 1px); }
-            100% { box-shadow: 0 0 40px rgba(239, 68, 68, 1), inset 0 0 30px rgba(239, 68, 68, 0.8); transform: translate(0, 0); }
+            0% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
+            50% { transform: translate(-3px, 1px); }
+            100% { box-shadow: 0 0 35px rgba(239, 68, 68, 1); transform: translate(0, 0); }
         }
         .animate-glitch-error {
-            animation: glitchRed 0.4s ease-in-out infinite alternate;
+            animation: glitchRed 0.3s ease-in-out infinite alternate;
         }
 
         /* Pop Banner Animation */
         @keyframes popIn {
-            0% { transform: scale(0.2); opacity: 0; }
-            70% { transform: scale(1.1); opacity: 1; }
+            0% { transform: scale(0.85); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
         .animate-pop {
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         /* Scoreboard Table */
         .score-row {
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
         .score-row.active-turn {
-            background: rgba(255,255,255,0.15);
-            border-left: 4px solid var(--neon-cyan);
-            transform: scale(1.02);
-        }
-        
-        #confetti-canvas {
-            position: absolute;
-            top:0; left:0; width:100%; height:100%;
-            z-index: 100;
-            pointer-events: none;
+            background: rgba(56, 189, 248, 0.2);
+            border-left: 4px solid #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
         }
     </style>
 </head>
@@ -221,59 +207,49 @@
 
     <!-- 3D Canvas -->
     <canvas id="game-canvas"></canvas>
-    
-    <!-- Confetti -->
-    <canvas id="confetti-canvas" class="hidden"></canvas>
 
     <!-- UI Layer -->
     <div id="ui-layer">
         
-        <!-- TOP BAR: Clean Header & Scoreboard -->
-        <div class="w-full flex justify-between items-start p-4 md:p-6 interactive-ui">
-            <!-- Header (Textos e legendas redundantes removidos) -->
-            <div class="glass-panel px-6 py-3 rounded-2xl border-t-2 border-pink-500">
-                <h1 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-400 font-orbitron drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]">
-                    GAME SHOW
-                </h1>
-            </div>
-
+        <!-- TOP BAR: Ranking -->
+        <div class="w-full flex justify-end items-start p-4 md:p-6 interactive-ui">
             <!-- Scoreboard -->
-            <div class="glass-panel p-4 rounded-xl border border-white/10 min-w-[220px]">
-                <h3 class="text-center font-orbitron text-xs text-gray-300 mb-3 tracking-widest border-b border-gray-600 pb-2">RANKING</h3>
+            <div class="glass-panel p-4 rounded-2xl border border-cyan-500/40 min-w-[250px]">
+                <h3 class="text-center font-orbitron text-xs text-yellow-400 mb-3 tracking-widest border-b border-cyan-500/30 pb-2">RANKING DO JOGO</h3>
                 <div id="scoreboard-list" class="flex flex-col gap-2">
                     <!-- Injected by JS -->
                 </div>
             </div>
         </div>
 
-        <!-- CENTER START SCREEN (Overlay limpo) -->
-        <div id="start-screen" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/70 backdrop-blur-md z-50">
-            <div class="glass-panel p-8 md:p-12 rounded-3xl text-center max-w-xl border border-pink-500 shadow-[0_0_50px_rgba(236,72,153,0.4)]">
-                <h2 class="text-5xl md:text-7xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-pink-600 mb-8 drop-shadow-[0_0_20px_rgba(236,72,153,0.9)]">
+        <!-- CENTER START SCREEN -->
+        <div id="start-screen" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/80 backdrop-blur-md z-50">
+            <div class="glass-panel p-8 md:p-12 rounded-3xl text-center max-w-xl border-2 border-yellow-400/60 shadow-[0_0_60px_rgba(234,179,8,0.35)]">
+                <h2 class="text-5xl md:text-7xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-500 to-cyan-400 mb-8 drop-shadow-[0_0_25px_rgba(234,179,8,0.8)]">
                     GAME SHOW
                 </h2>
                 
                 <button onclick="startGame()" class="btn-neon btn-neon-pink px-10 py-5 text-2xl animate-glow shadow-[0_0_30px_rgba(236,72,153,0.8)]">
-                    🚀 INICIAR GAME SHOW
+                    🚀 INICIAR JOGO
                 </button>
             </div>
         </div>
 
         <!-- CHALLENGE MODAL -->
-        <div id="challenge-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/60 backdrop-blur-sm z-40 hidden">
-            <div id="challenge-box" class="glass-panel p-8 md:p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-cyan-500 shadow-[0_0_40px_rgba(56,189,248,0.3)] transition-all duration-300 scale-95 overflow-y-auto max-h-[90vh]">
-                <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4 relative">
-                    <span class="text-cyan-400 font-orbitron font-bold text-lg" id="challenge-team-name">Equipe X</span>
+        <div id="challenge-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/70 backdrop-blur-md z-40 hidden">
+            <div id="challenge-box" class="glass-panel p-8 md:p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-cyan-500/60 shadow-[0_0_40px_rgba(56,189,248,0.3)] transition-all duration-300 overflow-y-auto max-h-[90vh]">
+                <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                    <span class="text-cyan-400 font-orbitron font-bold text-xl" id="challenge-team-name">Equipe X</span>
                     
                     <!-- Timer UI -->
-                    <div id="challenge-timer" class="w-12 h-12 bg-black/80 rounded-full border-2 border-cyan-500 flex items-center justify-center text-xl font-bold font-orbitron text-cyan-400 shadow-[0_0_10px_rgba(56,189,248,0.5)] transition-colors duration-300 hidden">
+                    <div id="challenge-timer" class="w-12 h-12 bg-black/80 rounded-full border-2 border-cyan-500 flex items-center justify-center text-xl font-bold font-orbitron text-cyan-400 shadow-[0_0_12px_rgba(56,189,248,0.4)] hidden">
                         45
                     </div>
 
-                    <span class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded text-sm font-fira border border-yellow-500/50" id="points-badge"><span id="challenge-points">100</span> pts</span>
+                    <span class="bg-yellow-500/20 text-yellow-300 px-3 py-1.5 rounded-lg text-sm font-fira border border-yellow-500/40" id="points-badge"><span id="challenge-points">100</span> pts</span>
                 </div>
 
-                <h3 class="text-xl md:text-3xl font-semibold mb-6 leading-relaxed" id="challenge-question">
+                <h3 class="text-xl md:text-3xl font-semibold mb-6 leading-relaxed text-cyan-50 drop-shadow-sm" id="challenge-question">
                     Carregando desafio...
                 </h3>
 
@@ -283,18 +259,18 @@
                 </div>
 
                 <!-- Hint Display Box -->
-                <div id="hint-display" class="hidden mb-6 p-4 bg-yellow-900/30 border border-yellow-500/50 rounded-lg text-yellow-200 text-sm font-fira">
+                <div id="hint-display" class="hidden mb-6 p-4 bg-yellow-950/50 border border-yellow-500/60 rounded-xl text-yellow-200 text-sm font-fira shadow-inner">
                 </div>
 
                 <!-- Event Mode (Obstacles / Boosts) -->
                 <div id="event-mode-container" class="hidden space-y-4 text-center">
-                    <div class="text-7xl mb-2 animate-bounce" id="event-icon">💥</div>
+                    <div class="text-7xl mb-2" id="event-icon">💥</div>
                     <div id="event-title-banner" class="text-3xl font-black font-orbitron tracking-wider"></div>
                     <div id="event-desc-text" class="text-lg text-gray-300 font-fira my-2 px-4"></div>
                     <div id="event-result-text" class="text-4xl font-black font-orbitron my-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"></div>
                     
                     <div class="w-full bg-gray-900/80 rounded-full h-4 overflow-hidden border border-white/20 mb-6 p-0.5">
-                        <div id="event-graphic-bar" class="h-full rounded-full transition-all duration-1000 w-0"></div>
+                        <div id="event-graphic-bar" class="h-full rounded-full transition-all duration-700 w-0"></div>
                     </div>
 
                     <button onclick="endTurn()" class="btn-neon btn-neon-pink px-8 py-3 text-lg font-orbitron">CONTINUAR ➔</button>
@@ -317,8 +293,7 @@
                 </div>
 
                 <!-- Result Feedback -->
-                <div id="result-feedback" class="hidden mt-6 text-center p-6 rounded-lg font-bold text-2xl font-orbitron border-2">
-                    <!-- Injected via JS -->
+                <div id="result-feedback" class="hidden mt-6 text-center p-6 rounded-xl font-bold text-2xl font-orbitron border-2">
                 </div>
 
                 <!-- Interactive Explanation Toggle Button & Box -->
@@ -326,8 +301,7 @@
                     <button onclick="toggleExplanation()" id="btn-explain" class="btn-neon text-cyan-300 border-cyan-500/50 hover:bg-cyan-500/20 text-xs w-full py-2 mb-2 flex items-center justify-center gap-2">
                         📖 EXPLICAR RESPOSTA
                     </button>
-                    <div id="explanation-box" class="hidden p-4 bg-cyan-950/60 border border-cyan-500/40 rounded-xl text-cyan-100 text-sm font-fira leading-relaxed shadow-inner">
-                        <!-- Injected via JS -->
+                    <div id="explanation-box" class="hidden p-4 bg-cyan-950/70 border border-cyan-500/50 rounded-xl text-cyan-100 text-sm font-fira leading-relaxed shadow-inner">
                     </div>
                 </div>
                 
@@ -338,15 +312,15 @@
         </div>
 
         <!-- ENDGAME MODAL -->
-        <div id="endgame-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/80 backdrop-blur-lg z-50 hidden">
-            <div class="glass-panel p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-yellow-500 shadow-[0_0_50px_rgba(234,179,8,0.5)]">
-                <h2 class="text-4xl md:text-5xl font-orbitron font-bold text-yellow-400 mb-4 drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]">FIM DE JOGO</h2>
-                
+        <div id="endgame-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/90 backdrop-blur-lg z-50 hidden">
+            <div class="glass-panel p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-yellow-500 shadow-[0_0_60px_rgba(234,179,8,0.6)] animate-pop">
+                <h2 class="text-4xl md:text-5xl font-orbitron font-bold text-yellow-400 mb-2 drop-shadow-[0_0_15px_rgba(234,179,8,0.8)]">FIM DE JOGO</h2>
+                <p class="text-yellow-200 text-sm mb-6 font-fira">🏆 O 1º LUGAR GANHOU +50 PONTOS BÔNUS AO CHEGAR NA LINHA DE CHEGADA!</p>
+
                 <h3 class="text-xl font-bold text-white mb-4 border-b border-white/20 pb-2">CLASSIFICAÇÃO GERAL</h3>
                 
                 <!-- Podium List -->
                 <div id="podium-list" class="flex flex-col gap-3 mb-8 w-full max-w-md mx-auto text-left">
-                    <!-- Injected by JS -->
                 </div>
 
                 <button onclick="location.reload()" class="btn-neon btn-neon-cyan mt-2">JOGAR NOVAMENTE</button>
@@ -354,16 +328,16 @@
         </div>
 
         <!-- BOTTOM BAR: Controls -->
-        <div class="w-full p-6 interactive-ui flex flex-col md:flex-row justify-center items-center gap-6 bg-gradient-to-t from-black/80 to-transparent pb-8">
+        <div class="w-full p-6 interactive-ui flex flex-col md:flex-row justify-center items-center gap-6 bg-gradient-to-t from-black/95 via-black/50 to-transparent pb-8">
             <div id="turn-indicator" class="hidden text-center md:text-right">
                 <p id="current-team-display" class="text-2xl md:text-3xl font-bold font-orbitron" style="color: var(--neon-cyan)">Equipe X</p>
             </div>
             
-            <button id="btn-roll-dice" onclick="rollDice()" class="hidden btn-neon btn-neon-pink px-8 py-4 text-xl shadow-[0_0_15px_rgba(236,72,153,0.5)]">
-                🎲 ROLAR DADO (1-3)
+            <button id="btn-roll-dice" onclick="rollDice()" class="hidden btn-neon btn-neon-pink px-8 py-4 text-xl shadow-[0_0_20px_rgba(236,72,153,0.5)]">
+                🎲 ROLAR DADO (1-4)
             </button>
 
-            <div id="dice-result" class="hidden text-3xl font-bold font-orbitron bg-white/10 px-6 py-3 rounded-xl border border-white/20">
+            <div id="dice-result" class="hidden text-3xl font-bold font-orbitron bg-black/70 px-6 py-3 rounded-xl border border-cyan-500/50 text-cyan-400 shadow-[0_0_15px_rgba(56,189,248,0.3)]">
                 -
             </div>
         </div>
@@ -383,86 +357,86 @@
         const challenges = [
             {
                 type: 'input',
-                q: "Qual comando INICIA uma transação no banco (começa o 'rascunho')?",
+                q: "Para iniciar um lote de registros de vendas de Natal na Loja Estrela sem aplicar as alterações imediatamente no banco, qual instrução inicia este bloco de transação?",
                 answer: ["begin", "begin;"],
-                hint: "Começa com a letra B. Significa 'início' em inglês.",
+                hint: "Instrução SQL que isola a sessão atual em modo de rascunho até que seja explicitamente encerrada.",
                 explanation: "O comando <b>BEGIN</b> inicia formalmente um bloco de transação. A partir deste momento, todas as alterações ficam em modo de 'rascunho' visíveis apenas para a sua própria sessão, até que sejam confirmadas com COMMIT ou descartadas com ROLLBACK."
             },
             {
                 type: 'input',
-                q: "Qual comando CONFIRMA a transação e salva os dados definitivamente?",
+                q: "Ao finalizar o fechamento do caixa diário da Loja Estrela, qual instrução garante a gravação definitiva e durável de todos os lançamentos?",
                 answer: ["commit", "commit;"],
-                hint: "Começa com a letra C. Depois dele, não tem mais volta.",
+                hint: "Garante a propriedade de Durabilidade (propriedade D do ACID), consolidando as alterações no disco.",
                 explanation: "O comando <b>COMMIT</b> confirma permanentemente as operações pendentes do bloco transacional no disco. Após o COMMIT, a alteração se torna durável e fica visível para todos os outros usuários do banco."
             },
             {
                 type: 'input',
-                q: "Qual comando CANCELA a transação e joga o 'rascunho' fora?",
+                q: "Se ocorrer um erro de processamento na listagem de produtos da Loja Estrela durante uma transação aberta, qual comando anula tudo o que foi alterado na sessão?",
                 answer: ["rollback", "rollback;"],
-                hint: "Significa 'rolar de volta' para o estado anterior.",
+                hint: "Comando responsável por restaurar a visibilidade da tabela ao estado exatamente anterior ao bloco 'BEGIN'.",
                 explanation: "O comando <b>ROLLBACK</b> anula e descarta todas as alterações realizadas dentro da transação atual. O banco de dados retorna exatamente ao estado idêntico ao instante anterior à execução do comando BEGIN."
             },
             {
                 type: 'input',
-                q: "Qual comando cria um PONTO DE SALVAMENTO intermediário durante a transação?",
+                q: "Em uma venda complexa com múltiplos itens na Loja Estrela, qual recurso cria um marcador intermediário para que um erro em um único item não cancele a compra inteira?",
                 answer: ["savepoint", "savepoint;"],
-                hint: "É a junção das palavras 'salvar' e 'ponto' em inglês.",
-                explanation: "O <b>SAVEPOINT</b> marca uma estaca intermediária na transação. Isso permite desfazer apenas parte do trabalho com ROLLBACK TO SAVEPOINT sem perder o que já havia sido processado com sucesso anteriormente."
+                hint: "Permite controle fino de rollback parcial dentro de uma mesma transação ativa.",
+                explanation: "O <b>SAVEPOINT</b> marca uma estaca intermediária na transação. Isso permite desfazer apenas parte do trabalho com ROLLBACK TO SAVEPOINT sem perder o que já havia sido processado com sucesso anterior."
             },
             {
                 type: 'input',
-                q: "Qual ferramenta usamos no terminal (psql) para importar ou exportar dados de uma planilha/arquivo de texto?",
+                q: "O operador do caixa precisa importar a tabela de fornecedores da Loja Estrela diretamente de um arquivo no computador local através do psql. Qual meta-comando ele deve executar?",
                 answer: ["\\copy", "copy", "\\copy;", "copy;"],
-                hint: "Significa 'copiar' em inglês. No terminal, usamos com uma contrabarra (\\) antes.",
+                hint: "Trata-se de um utilitário do lado do cliente do psql (iniciado por caractere de escape), diferindo do comando SQL executado no servidor.",
                 explanation: "O meta-comando <b>\\copy</b> executa no lado do cliente psql. Diferente do COPY SQL puro, o \\copy lê e grava arquivos de texto/CSV direto no computador do próprio usuário."
             },
             {
                 type: 'input',
-                q: "Qual comando faz o BACKUP (exportação) de um banco de dados inteiro?",
+                q: "Qual ferramenta em linha de comando é utilizada pelo administrador da Loja Estrela para gerar uma cópia de segurança (backup lógico) consistente de todo o banco PostgreSQL?",
                 answer: ["pg_dump", "pg dump"],
-                hint: "Tem o prefixo 'pg_' e a palavra 'despejar' (dump) em inglês.",
+                hint: "Utilitário nativo executado fora do SQL que extrai definições de esquema e dados em scripts ou formatos binários.",
                 explanation: "O <b>pg_dump</b> é o utilitário nativo de backup lógico do PostgreSQL. Ele tira uma foto consistente dos dados sem bloquear leituras ou escritas que estejam ocorrendo simultaneamente."
             },
             {
                 type: 'tf',
-                q: "O comando COMMIT pode ser desfeito usando o comando ROLLBACK logo em seguida.",
+                q: "Um operador da Loja Estrela executou um COMMIT após atualizar o estoque. Se ele executar ROLLBACK logo em seguida na mesma janela, o estoque voltará ao valor anterior.",
                 answer: false,
-                hint: "Lembre-se: o COMMIT grava os dados permanentemente no disco.",
+                hint: "Analise se o ciclo de vida da transação continua ativo após a instrução de consolidação de dados.",
                 explanation: "<b>FALSO!</b> Uma vez executado o COMMIT, os dados são gravados permanentemente no banco. O ROLLBACK só funciona enquanto a transação estiver aberta (antes do COMMIT)."
             },
             {
                 type: 'tf',
-                q: "Se um cartão for recusado ao final de um pedido, o comando ROLLBACK garante que o item devolvido volte para o estoque (atomicidade).",
+                q: "Em uma compra na Loja Estrela, a falha ao autorizar o pagamento no sistema bancário dispara um ROLLBACK, garantindo que o estoque reservado não seja baixado incorretamente.",
                 answer: true,
-                hint: "A propriedade da Atomicidade diz que ou tudo acontece, ou nada é gravado.",
+                hint: "Avalie como a propriedade de Atomicidade (tudo ou nada) do protocolo ACID trata erros em transações financeiras.",
                 explanation: "<b>VERDADEIRO!</b> O princípio da <i>Atomicidade</i> garante que uma transação aconteça por inteiro ou não aconteça nada ('tudo ou nada'). Se o pagamento falhar, o ROLLBACK reverte a baixa no estoque automaticamente."
             },
             {
                 type: 'tf',
-                q: "O comando ROLLBACK TO desfaz apenas até o ponto de salvamento escolhido, mantendo os itens que já tinham dado certo antes.",
+                q: "A instrução ROLLBACK TO SAVEPOINT desfaz apenas os comandos executados após o marcador indicado, mantendo intactas as inserções bem-sucedidas anteriores.",
                 answer: true,
-                hint: "Essa é a utilidade prática do SAVEPOINT em compras de múltiplos itens.",
+                hint: "Considere se o ponto de salvamento cancela o bloco transacional por completo ou de forma pontual.",
                 explanation: "<b>VERDADEIRO!</b> O comando ROLLBACK TO SAVEPOINT cancela apenas o trecho de código executado após o ponto marcado, preservando o progresso transacional anterior até o desfecho final com o COMMIT."
             },
             {
                 type: 'input',
-                q: "Qual comando RESTAURA um backup criado no formato customizado ou diretório?",
+                q: "Qual utilitário de terminal deve ser chamado para reinstalar a base de dados da Loja Estrela a partir de um arquivo de backup compilado em formato customizado (.dump)?",
                 answer: ["pg_restore", "pg restore"],
-                hint: "Tem o prefixo 'pg_' e a palavra 'restaurar' em inglês.",
+                hint: "Ferramenta de restauração capaz de reprocessar backups binários e realizar operações concorrentes de reconstrução de tabelas.",
                 explanation: "O utilitário <b>pg_restore</b> pega os arquivos comprimidos (.dump/.dir) gerados pelo pg_dump e reconstrói o banco de dados."
             },
             {
                 type: 'tf',
-                q: "Arquivos CSV são muito pesados e só podem ser abertos por programas específicos de banco de dados.",
+                q: "Arquivos no formato CSV exigem obrigatoriamente a instalação de um SGBD completo para que seu conteúdo textual possa ser inspecionado.",
                 answer: false,
-                hint: "CSV é uma sigla para valores separados por vírgulas em texto puro.",
+                hint: "Reflita sobre a estrutura física interna de um arquivo estruturado com delimitadores simples.",
                 explanation: "<b>FALSO!</b> O CSV (Comma-Separated Values) é um formato de texto simples e extremamente leve. Ele pode ser aberto em qualquer bloco de notas ou softwares de planilha."
             },
             {
                 type: 'input',
-                q: "Qual a sigla do arquivo de texto simples usado para trocar dados, onde os valores são separados por vírgula?",
+                q: "Qual é o formato de arquivo padrão em texto plano, cujos campos são delimitados por vírgulas, amplamente utilizado para migração de relatórios na Loja Estrela?",
                 answer: ["csv", ".csv"],
-                hint: "São apenas 3 letras (Comma-Separated Values).",
+                hint: "Formato universal de intercâmbio de dados cujas colunas são separadas por caracteres de pontuação padrão.",
                 explanation: "<b>CSV</b> significa 'Comma-Separated Values'. É o formato padrão universal mais utilizado para migração e troca rápida de dados."
             }
         ];
@@ -547,11 +521,11 @@
             }
         }
 
-        // --- THREE.JS SETUP WITH HIGH QUALITY GRAPHICS ---
+        // --- THREE.JS SETUP OPTIMIZED FOR 60 FPS ---
         let scene, camera, renderer;
         let pieceMeshes = [];
         let galaxy;
-        let activeParticles = []; // For explosion particle systems
+        let activeParticles = [];
         let cameraTargetPos = new THREE.Vector3(0, 32, 42);
         let cameraLookTarget = new THREE.Vector3(0, 0, 2);
         let currentCamPos = new THREE.Vector3(0, 32, 42);
@@ -560,40 +534,32 @@
         function init3D() {
             const canvas = document.getElementById('game-canvas');
             scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x06020e, 0.01);
 
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.set(0, 32, 42);
             camera.lookAt(0, 0, 2);
 
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+            // Optimized Renderer Configuration
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: true, powerPreference: "high-performance" });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.setPixelRatio(1.0);
+            renderer.shadowMap.enabled = false;
 
-            // Iluminação Visual Aprimorada
-            const ambient = new THREE.AmbientLight(0xffffff, 0.45);
+            // Simplified Ambient & Directional Lighting
+            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
             scene.add(ambient);
             
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            dirLight.position.set(20, 40, 20);
-            dirLight.castShadow = true;
-            dirLight.shadow.mapSize.width = 1024;
-            dirLight.shadow.mapSize.height = 1024;
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+            dirLight.position.set(15, 30, 15);
             scene.add(dirLight);
 
-            const pLight1 = new THREE.PointLight(0xec4899, 3.5, 150);
-            pLight1.position.set(-18, 30, 18);
+            const pLight1 = new THREE.PointLight(0xec4899, 1.5, 80);
+            pLight1.position.set(-15, 20, 15);
             scene.add(pLight1);
             
-            const pLight2 = new THREE.PointLight(0x38bdf8, 3.5, 150);
-            pLight2.position.set(18, 30, -18);
+            const pLight2 = new THREE.PointLight(0x38bdf8, 1.5, 80);
+            pLight2.position.set(15, 20, -15);
             scene.add(pLight2);
-
-            const pLightCenter = new THREE.PointLight(0xa855f7, 3.0, 100);
-            pLightCenter.position.set(0, 15, 0);
-            scene.add(pLightCenter);
 
             buildBoard();
             buildPieces();
@@ -623,21 +589,19 @@
                 const mat = new THREE.MeshStandardMaterial({ 
                     color: color, 
                     emissive: emissive,
-                    roughness: 0.1,
-                    metalness: 0.9
+                    roughness: 0.2,
+                    metalness: 0.7
                 });
                 
                 const tile = new THREE.Mesh(tileGeo, mat);
                 tile.position.copy(boardPath[i]);
-                tile.position.y = Math.sin(i * 0.3) * 0.2;
-                tile.receiveShadow = true;
-                tile.castShadow = true;
+                tile.position.y = Math.sin(i * 0.3) * 0.15;
                 
                 const rimGeo = new THREE.BoxGeometry(3.4, 0.2, 3.4);
                 const rimMat = new THREE.MeshStandardMaterial({ 
                     color: color, 
                     emissive: color, 
-                    emissiveIntensity: 0.9 
+                    emissiveIntensity: 0.8 
                 });
                 const rimTile = new THREE.Mesh(rimGeo, rimMat);
                 rimTile.position.copy(tile.position);
@@ -661,30 +625,24 @@
         }
 
         function buildPieces() {
-            const baseGeo = new THREE.CylinderGeometry(0.9, 1.1, 0.4, 32);
-            const bodyGeo = new THREE.ConeGeometry(0.7, 2.0, 32);
-            const headGeo = new THREE.SphereGeometry(0.5, 32, 32);
+            const baseGeo = new THREE.CylinderGeometry(0.8, 1.0, 0.4, 12);
+            const bodyGeo = new THREE.ConeGeometry(0.65, 1.8, 12);
+            const headGeo = new THREE.SphereGeometry(0.45, 12, 12);
             
-            bodyGeo.translate(0, 1.2, 0);
-            headGeo.translate(0, 2.3, 0);
+            bodyGeo.translate(0, 1.1, 0);
+            headGeo.translate(0, 2.1, 0);
 
             teamsData.forEach((team, idx) => {
                 const mat = new THREE.MeshStandardMaterial({ 
                     color: team.color,
-                    emissive: team.color,
-                    emissiveIntensity: 0.7,
-                    roughness: 0.05,
-                    metalness: 0.95
+                    roughness: 0.3,
+                    metalness: 0.7
                 });
 
                 const pawn = new THREE.Group();
                 const baseMesh = new THREE.Mesh(baseGeo, mat);
                 const bodyMesh = new THREE.Mesh(bodyGeo, mat);
                 const headMesh = new THREE.Mesh(headGeo, mat);
-                
-                baseMesh.castShadow = true;
-                bodyMesh.castShadow = true;
-                headMesh.castShadow = true;
 
                 pawn.add(baseMesh);
                 pawn.add(bodyMesh);
@@ -700,66 +658,60 @@
         }
 
         function getPieceOffset(index) {
-            const angle = (index / 5) * Math.PI * 2;
-            const radius = 0.8;
-            return new THREE.Vector3(Math.cos(angle) * radius, 0.3, Math.sin(angle) * radius);
+            const offsets = [
+                new THREE.Vector3(-0.55, 0.5, -0.55),
+                new THREE.Vector3(0.55, 0.5, -0.55),
+                new THREE.Vector3(-0.55, 0.5, 0.55),
+                new THREE.Vector3(0.55, 0.5, 0.55),
+                new THREE.Vector3(0, 0.5, 0)
+            ];
+            return offsets[index % offsets.length];
+        }
+
+        function triggerRollZoom() {
+            const pawn = pieceMeshes[currentTeamIndex];
+            if (!pawn) return;
+            cameraTargetPos.set(pawn.position.x, pawn.position.y + 11, pawn.position.z + 14);
+            cameraLookTarget.copy(pawn.position);
+        }
+
+        function trackMovingPawn(pos) {
+            cameraTargetPos.set(pos.x, pos.y + 11, pos.z + 14);
+            cameraLookTarget.copy(pos);
+        }
+
+        function resetCameraView() {
+            cameraTargetPos.set(0, 32, 42);
+            cameraLookTarget.set(0, 0, 2);
         }
 
         function createGalaxy() {
-            const particleCount = 8000;
+            const particleCount = 600;
             const geo = new THREE.BufferGeometry();
             const pos = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
-            
-            const colorPink = new THREE.Color(0xec4899);
-            const colorPurple = new THREE.Color(0xa855f7);
-            const colorCyan = new THREE.Color(0x38bdf8);
-            const colorYellow = new THREE.Color(0xeab308);
             
             for(let i = 0; i < particleCount; i++) {
-                const r = Math.random() * 140 + 30;
-                const branch = i % 5;
-                const theta = (branch * ((Math.PI * 2) / 5)) + (r * 0.04) + (Math.random() * 0.6 - 0.3);
-                
-                const x = Math.cos(theta) * r;
-                const y = (Math.random() - 0.5) * 25 - 30;
-                const z = Math.sin(theta) * r - 40;
-                
-                pos[i*3] = x;
-                pos[i*3+1] = y;
-                pos[i*3+2] = z;
-
-                const randVal = Math.random();
-                let mixedColor = colorPink.clone();
-                if (randVal > 0.75) mixedColor = colorCyan.clone();
-                else if (randVal > 0.5) mixedColor = colorPurple.clone();
-                else if (randVal > 0.25) mixedColor = colorYellow.clone();
-
-                colors[i*3] = mixedColor.r;
-                colors[i*3+1] = mixedColor.g;
-                colors[i*3+2] = mixedColor.b;
+                pos[i*3] = (Math.random() - 0.5) * 140;
+                pos[i*3+1] = (Math.random() - 0.5) * 50 - 20;
+                pos[i*3+2] = (Math.random() - 0.5) * 140 - 20;
             }
             
             geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
             
             const mat = new THREE.PointsMaterial({ 
-                size: 0.4, 
-                vertexColors: true, 
+                size: 0.6, 
+                color: 0x38bdf8,
                 transparent: true, 
-                opacity: 0.45, 
-                blending: THREE.AdditiveBlending 
+                opacity: 0.35
             });
             
             galaxy = new THREE.Points(geo, mat);
-            galaxy.rotation.x = Math.PI / 5;
             scene.add(galaxy);
         }
 
-        // --- 3D EXPLOSION EFFECT FOR LOSS / TRAPS ---
         function create3DExplosion(position) {
             playSound('explosion');
-            const particleCount = 120;
+            const particleCount = 18;
             const geo = new THREE.BufferGeometry();
             const positions = new Float32Array(particleCount * 3);
             const velocities = [];
@@ -770,36 +722,24 @@
                 positions[i * 3 + 2] = position.z;
 
                 velocities.push(new THREE.Vector3(
-                    (Math.random() - 0.5) * 1.5,
-                    Math.random() * 1.8 + 0.5,
-                    (Math.random() - 0.5) * 1.5
+                    (Math.random() - 0.5) * 0.7,
+                    Math.random() * 0.9 + 0.2,
+                    (Math.random() - 0.5) * 0.7
                 ));
             }
 
             geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-            const mat = new THREE.PointsMaterial({
-                color: 0xef4444,
-                size: 0.6,
-                transparent: true,
-                opacity: 1,
-                blending: THREE.AdditiveBlending
-            });
-
+            const mat = new THREE.PointsMaterial({ color: 0xef4444, size: 0.55, transparent: true, opacity: 1 });
             const pSystem = new THREE.Points(geo, mat);
             scene.add(pSystem);
 
-            activeParticles.push({
-                system: pSystem,
-                velocities: velocities,
-                life: 1.0
-            });
+            activeParticles.push({ system: pSystem, velocities: velocities, life: 1.0 });
         }
 
         function updateExplosions() {
             for (let i = activeParticles.length - 1; i >= 0; i--) {
                 const item = activeParticles[i];
-                item.life -= 0.03;
+                item.life -= 0.06;
 
                 if (item.life <= 0) {
                     scene.remove(item.system);
@@ -816,70 +756,42 @@
                     posArr[j * 3] += item.velocities[j].x;
                     posArr[j * 3 + 1] += item.velocities[j].y;
                     posArr[j * 3 + 2] += item.velocities[j].z;
-
-                    item.velocities[j].y -= 0.05; // Gravity
+                    item.velocities[j].y -= 0.035;
                 }
 
                 item.system.geometry.attributes.position.needsUpdate = true;
             }
         }
 
-        function triggerRollZoom() {
-            const team = teamsData[currentTeamIndex];
-            const pawnMesh = pieceMeshes[currentTeamIndex];
-            
-            if (pawnMesh) {
-                const targetTilePos = boardPath[team.pos];
-                cameraTargetPos.set(targetTilePos.x, 12, targetTilePos.z + 14);
-                cameraLookTarget.set(targetTilePos.x, 1, targetTilePos.z);
-            }
-        }
-
-        function trackMovingPawn(pawnPosition) {
-            cameraTargetPos.set(pawnPosition.x, 12, pawnPosition.z + 14);
-            cameraLookTarget.set(pawnPosition.x, 1, pawnPosition.z);
-        }
-
-        function resetCameraView() {
-            cameraTargetPos.set(0, 32, 42);
-            cameraLookTarget.set(0, 0, 2);
-        }
-
         function animate3D() {
             requestAnimationFrame(animate3D);
-            
-            const time = Date.now() * 0.0008;
 
-            currentCamPos.lerp(cameraTargetPos, 0.05);
-            currentCamLook.lerp(cameraLookTarget, 0.05);
+            currentCamPos.lerp(cameraTargetPos, 0.08);
+            currentCamLook.lerp(cameraLookTarget, 0.08);
 
-            camera.position.x = currentCamPos.x + Math.sin(time) * 1.5;
-            camera.position.y = currentCamPos.y + Math.cos(time * 0.7) * 0.8;
-            camera.position.z = currentCamPos.z + Math.cos(time * 0.8) * 1.2;
+            camera.position.copy(currentCamPos);
             camera.lookAt(currentCamLook);
 
-            if (galaxy) {
-                galaxy.rotation.y += 0.0015;
-            }
-            
+            if (galaxy) galaxy.rotation.y += 0.0006;
             updateExplosions();
 
-            if (!isMoving) {
-                pieceMeshes.forEach((mesh, idx) => {
-                    const offset = getPieceOffset(idx);
-                    const targetPos = boardPath[teamsData[idx].pos].clone().add(offset);
-                    
-                    if (idx === currentTeamIndex) {
-                        mesh.rotation.y += 0.05;
-                        mesh.position.y = targetPos.y + 0.6 + Math.sin(Date.now() * 0.008) * 0.4;
-                    } else {
-                        mesh.rotation.y = 0;
-                        mesh.position.y = targetPos.y;
-                    }
+            pieceMeshes.forEach((mesh, idx) => {
+                const offset = getPieceOffset(idx);
+                const targetPos = boardPath[teamsData[idx].pos].clone().add(offset);
+                
+                if (!isMoving && idx === currentTeamIndex) {
+                    mesh.rotation.y += 0.04;
+                    mesh.position.y = targetPos.y + 0.4 + Math.sin(Date.now() * 0.006) * 0.18;
+                } else if (!isMoving) {
+                    mesh.rotation.y = 0;
+                    mesh.position.y = targetPos.y;
+                }
+
+                if (!isMoving) {
                     mesh.position.x = targetPos.x;
                     mesh.position.z = targetPos.z;
-                });
-            }
+                }
+            });
 
             renderer.render(scene, camera);
         }
@@ -931,14 +843,14 @@
             let rollCount = 0;
             
             const rollInterval = setInterval(() => {
-                const tempRoll = Math.floor(Math.random() * 3) + 1;
+                const tempRoll = Math.floor(Math.random() * 4) + 1;
                 diceEl.innerText = tempRoll;
                 playSound('roll');
                 rollCount++;
 
                 if (rollCount > 8) {
                     clearInterval(rollInterval);
-                    const finalRoll = Math.floor(Math.random() * 3) + 1;
+                    const finalRoll = Math.floor(Math.random() * 4) + 1;
                     diceEl.innerText = finalRoll;
                     movePieceStepByStep(finalRoll);
                 }
@@ -957,9 +869,10 @@
                     trackMovingPawn(pawnMesh.position);
                 }
 
+                // First place finish bonus (+50 points)
                 if (team.pos >= BOARD_SIZE - 1) {
                     team.pos = BOARD_SIZE - 1;
-                    team.score += 50;
+                    team.score += 50; // Continuous cumulative score bonus
                     updateScoreboard();
                     triggerEndGame();
                     return;
@@ -968,7 +881,6 @@
                 setTimeout(() => {
                     const tileType = tileData[team.pos];
                     if (tileType === 'trap') {
-                        // Trigger 3D Explosion when landing on Trap
                         if (pawnMesh) create3DExplosion(pawnMesh.position);
                         triggerEventModal('trap', 'FALHA DE ENERGIA!', 'O servidor reiniciou e corrompeu a transação!', -50);
                     } else if (tileType === 'boost') {
@@ -1050,6 +962,7 @@
                 setTimeout(() => { graphicBar.style.width = "100%"; }, 100);
             }
 
+            // Cumulative continuous point addition
             teamsData[currentTeamIndex].score += pointDelta;
             updateScoreboard();
             modal.classList.remove('hidden');
@@ -1154,6 +1067,7 @@
 
             if (isCorrect) {
                 playSound('correct');
+                // Continuous score accumulation
                 teamsData[currentTeamIndex].score += currentPointsVal;
                 updateScoreboard();
 
@@ -1161,7 +1075,6 @@
                 resBox.className = "mt-6 text-center p-6 rounded-xl font-bold text-2xl font-orbitron border-2 bg-green-950/80 border-green-500 text-green-300 shadow-[0_0_20px_rgba(34,197,94,0.4)]";
                 resBox.innerHTML = `✅ RESPOSTA CORRETA!<br><span class="text-lg font-fira font-normal text-green-200">+${currentPointsVal} PONTOS REGISTRADOS!</span>`;
             } else {
-                // Trigger 3D Explosion particle effect on the pawn location when answering wrong
                 const pawnMesh = pieceMeshes[currentTeamIndex];
                 if (pawnMesh) create3DExplosion(pawnMesh.position);
 
@@ -1224,15 +1137,15 @@
             sorted.forEach((team) => {
                 const row = document.createElement('div');
                 row.id = `score-row-${team.id}`;
-                row.className = `score-row flex justify-between items-center p-2 rounded-lg text-sm font-fira border border-white/5 ${team.id === teamsData[currentTeamIndex].id ? 'active-turn' : ''}`;
+                row.className = `score-row flex justify-between items-center p-2.5 rounded-lg text-sm font-fira border border-white/10 ${team.id === teamsData[currentTeamIndex].id ? 'active-turn' : 'bg-black/30'}`;
                 row.innerHTML = `
                     <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full" style="background-color: ${team.hex}"></span>
-                        <span class="font-bold">${team.name}</span>
+                        <span class="w-3 h-3 rounded-full shadow-[0_0_8px_${team.hex}]" style="background-color: ${team.hex}"></span>
+                        <span class="font-bold text-gray-100">${team.name}</span>
                     </div>
                     <div class="flex gap-3">
-                        <span class="text-xs text-gray-400">Casa ${team.pos + 1}</span>
-                        <span class="font-bold text-yellow-400">${team.score} pts</span>
+                        <span class="text-xs text-cyan-300/80">Casa ${team.pos + 1}</span>
+                        <span class="font-bold text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.5)]">${team.score} pts</span>
                     </div>
                 `;
                 list.appendChild(row);
@@ -1251,11 +1164,11 @@
 
             sorted.forEach((team, idx) => {
                 const row = document.createElement('div');
-                row.className = `flex justify-between items-center p-3 rounded-xl border ${idx === 0 ? 'bg-yellow-500/20 border-yellow-500 text-yellow-300 font-bold scale-105 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'bg-black/50 border-white/10 text-gray-200'}`;
+                row.className = `flex justify-between items-center p-3 rounded-xl border ${idx === 0 ? 'bg-yellow-500/20 border-yellow-500 text-yellow-300 font-bold scale-105 shadow-[0_0_20px_rgba(234,179,8,0.4)]' : 'bg-black/50 border-white/10 text-gray-200'}`;
                 row.innerHTML = `
                     <div class="flex items-center gap-3">
                         <span class="text-2xl">${medals[idx]}</span>
-                        <span class="w-3 h-3 rounded-full" style="background-color: ${team.hex}"></span>
+                        <span class="w-3 h-3 rounded-full shadow-[0_0_8px_${team.hex}]" style="background-color: ${team.hex}"></span>
                         <span class="font-orbitron">${team.name}</span>
                     </div>
                     <span class="font-fira font-bold text-lg ${idx === 0 ? 'text-yellow-400' : 'text-cyan-400'}">${team.score} PTS</span>
@@ -1280,9 +1193,3 @@
     </script>
 </body>
 </html>
-```
-
-### O que foi atualizado:
-1. **Gráficos 3D Aprimorados:** Iluminação direcional com projeção de sombras suaves, refletores adicionais e materiais metálicos/reflexivos nas peças e casas do tabuleiro.
-2. **Interface Mais Limpa:** Removidos textos redundantes, instruções de tela inicial e rótulos desnecessários das janelas para focar na ação do jogo.
-3. **Efeito 3D de Explosão:** Adicionado um sistema de partículas 3D em tempo real que simula uma explosão com som quando um time cai em uma armadilha ou erra a resposta da pergunta.
