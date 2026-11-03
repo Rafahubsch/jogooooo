@@ -869,12 +869,11 @@
                     trackMovingPawn(pawnMesh.position);
                 }
 
-                // First place finish bonus (+50 points)
+                // Finish line check - end game immediately without adding bonus here (bonus calculated at endgame)
                 if (team.pos >= BOARD_SIZE - 1) {
                     team.pos = BOARD_SIZE - 1;
-                    team.score += 50; // Continuous cumulative score bonus
                     updateScoreboard();
-                    triggerEndGame();
+                    triggerEndGame(team.id);
                     return;
                 }
 
@@ -1152,9 +1151,17 @@
             });
         }
 
-        function triggerEndGame() {
+        function triggerEndGame(winnerId) {
             clearInterval(countdownTimer);
             playSound('win');
+
+            // Award the 50 points bonus ONLY now at the end of the game to the first place finisher
+            if (winnerId !== undefined && winnerId !== null) {
+                const winningTeam = teamsData.find(t => t.id === winnerId);
+                if (winningTeam) {
+                    winningTeam.score += 50;
+                }
+            }
 
             const sorted = [...teamsData].sort((a, b) => b.score - a.score || b.pos - a.pos);
             const podiumList = document.getElementById('podium-list');
@@ -1163,13 +1170,14 @@
             const medals = ['🥇', '🥈', '🥉', '4º', '5º'];
 
             sorted.forEach((team, idx) => {
+                const isWinner = team.id === winnerId;
                 const row = document.createElement('div');
                 row.className = `flex justify-between items-center p-3 rounded-xl border ${idx === 0 ? 'bg-yellow-500/20 border-yellow-500 text-yellow-300 font-bold scale-105 shadow-[0_0_20px_rgba(234,179,8,0.4)]' : 'bg-black/50 border-white/10 text-gray-200'}`;
                 row.innerHTML = `
                     <div class="flex items-center gap-3">
                         <span class="text-2xl">${medals[idx]}</span>
                         <span class="w-3 h-3 rounded-full shadow-[0_0_8px_${team.hex}]" style="background-color: ${team.hex}"></span>
-                        <span class="font-orbitron">${team.name}</span>
+                        <span class="font-orbitron">${team.name} ${isWinner ? '<span class="text-xs text-yellow-400 font-fira border border-yellow-400 px-1 rounded ml-1">+50 BÔNUS CHEGADA</span>' : ''}</span>
                     </div>
                     <span class="font-fira font-bold text-lg ${idx === 0 ? 'text-yellow-400' : 'text-cyan-400'}">${team.score} PTS</span>
                 `;
