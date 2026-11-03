@@ -31,8 +31,16 @@
             height: 100%;
             overflow: hidden; /* Full screen 3D app */
             font-family: 'Rajdhani', sans-serif;
-            background-color: #05010a;
+            background: linear-gradient(135deg, #05010a 0%, #150024 50%, #030816 100%);
+            background-size: 200% 200%;
+            animation: gradientBG 15s ease infinite;
             color: white;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* 3D Canvas Background */
@@ -69,11 +77,11 @@
 
         /* Glassmorphism */
         .glass-panel {
-            background: rgba(15, 5, 24, 0.65);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            background: rgba(10, 4, 18, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.7);
         }
 
         /* Neon Buttons */
@@ -158,6 +166,39 @@
             animation: pulse-glow 2s infinite;
         }
 
+        /* Trap Shake Effect */
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-8px, 4px) rotate(-1deg); }
+            20%, 40%, 60%, 80% { transform: translate(8px, -4px) rotate(1deg); }
+        }
+        .animate-shake {
+            animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        /* Glitch Effect for Wrong Answers */
+        @keyframes glitchRed {
+            0% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.8), inset 0 0 15px rgba(239, 68, 68, 0.5); }
+            20% { transform: translate(-4px, 2px); }
+            40% { transform: translate(4px, -2px); }
+            60% { transform: translate(-2px, -3px); }
+            80% { transform: translate(3px, 1px); }
+            100% { box-shadow: 0 0 40px rgba(239, 68, 68, 1), inset 0 0 30px rgba(239, 68, 68, 0.8); transform: translate(0, 0); }
+        }
+        .animate-glitch-error {
+            animation: glitchRed 0.4s ease-in-out infinite alternate;
+        }
+
+        /* Pop Banner Animation */
+        @keyframes popIn {
+            0% { transform: scale(0.2); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
         /* Scoreboard Table */
         .score-row {
             transition: all 0.3s ease;
@@ -187,33 +228,30 @@
     <!-- UI Layer -->
     <div id="ui-layer">
         
-        <!-- TOP BAR: Header & Scoreboard -->
+        <!-- TOP BAR: Clean Header & Scoreboard -->
         <div class="w-full flex justify-between items-start p-4 md:p-6 interactive-ui">
-            <!-- Header -->
-            <div class="glass-panel px-6 py-3 rounded-2xl border-t-2 border-pink-500 max-w-sm">
+            <!-- Header (Textos e legendas redundantes removidos) -->
+            <div class="glass-panel px-6 py-3 rounded-2xl border-t-2 border-pink-500">
                 <h1 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-400 font-orbitron drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]">
                     GAME SHOW
                 </h1>
-                <p class="text-xs md:text-sm text-pink-200 tracking-widest uppercase">PostgreSQL Edition</p>
             </div>
 
             <!-- Scoreboard -->
-            <div class="glass-panel p-4 rounded-xl border border-white/10 min-w-[250px]">
-                <h3 class="text-center font-orbitron text-sm text-gray-300 mb-3 tracking-widest border-b border-gray-600 pb-2">RANKING (PONTOS)</h3>
+            <div class="glass-panel p-4 rounded-xl border border-white/10 min-w-[220px]">
+                <h3 class="text-center font-orbitron text-xs text-gray-300 mb-3 tracking-widest border-b border-gray-600 pb-2">RANKING</h3>
                 <div id="scoreboard-list" class="flex flex-col gap-2">
                     <!-- Injected by JS -->
                 </div>
             </div>
         </div>
 
-        <!-- CENTER START SCREEN (Overlay) -->
+        <!-- CENTER START SCREEN (Overlay limpo) -->
         <div id="start-screen" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/70 backdrop-blur-md z-50">
-            <div class="glass-panel p-8 md:p-12 rounded-3xl text-center max-w-2xl border border-pink-500 shadow-[0_0_50px_rgba(236,72,153,0.4)]">
-                <h2 class="text-5xl md:text-7xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-pink-600 mb-4 drop-shadow-[0_0_20px_rgba(236,72,153,0.9)]">
+            <div class="glass-panel p-8 md:p-12 rounded-3xl text-center max-w-xl border border-pink-500 shadow-[0_0_50px_rgba(236,72,153,0.4)]">
+                <h2 class="text-5xl md:text-7xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-pink-600 mb-8 drop-shadow-[0_0_20px_rgba(236,72,153,0.9)]">
                     GAME SHOW
                 </h2>
-                <p class="text-lg md:text-xl text-pink-200 font-orbitron mb-2">DESAFIO POSTGRESQL</p>
-                <p class="text-sm text-gray-300 mb-8 max-w-md mx-auto">5 Equipes em uma disputa sobre Migração, Exportação, Importação e Transações!</p>
                 
                 <button onclick="startGame()" class="btn-neon btn-neon-pink px-10 py-5 text-2xl animate-glow shadow-[0_0_30px_rgba(236,72,153,0.8)]">
                     🚀 INICIAR GAME SHOW
@@ -223,54 +261,74 @@
 
         <!-- CHALLENGE MODAL -->
         <div id="challenge-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/60 backdrop-blur-sm z-40 hidden">
-            <div id="challenge-box" class="glass-panel p-8 md:p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-cyan-500 shadow-[0_0_40px_rgba(56,189,248,0.3)] transition-all duration-300 scale-95">
+            <div id="challenge-box" class="glass-panel p-8 md:p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-cyan-500 shadow-[0_0_40px_rgba(56,189,248,0.3)] transition-all duration-300 scale-95 overflow-y-auto max-h-[90vh]">
                 <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4 relative">
                     <span class="text-cyan-400 font-orbitron font-bold text-lg" id="challenge-team-name">Equipe X</span>
                     
                     <!-- Timer UI -->
-                    <div id="challenge-timer" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-black/80 rounded-full border-2 border-cyan-500 flex items-center justify-center text-xl font-bold font-orbitron text-cyan-400 shadow-[0_0_10px_rgba(56,189,248,0.5)] transition-colors duration-300 hidden">
+                    <div id="challenge-timer" class="w-12 h-12 bg-black/80 rounded-full border-2 border-cyan-500 flex items-center justify-center text-xl font-bold font-orbitron text-cyan-400 shadow-[0_0_10px_rgba(56,189,248,0.5)] transition-colors duration-300 hidden">
                         45
                     </div>
 
-                    <span class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded text-sm font-fira border border-yellow-500/50" id="points-badge">Valendo: <span id="challenge-points">100</span> pts</span>
+                    <span class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded text-sm font-fira border border-yellow-500/50" id="points-badge"><span id="challenge-points">100</span> pts</span>
                 </div>
 
-                <h3 class="text-xl md:text-3xl font-semibold mb-8 leading-relaxed" id="challenge-question">
+                <h3 class="text-xl md:text-3xl font-semibold mb-6 leading-relaxed" id="challenge-question">
                     Carregando desafio...
                 </h3>
 
+                <!-- Universal Hint Button -->
+                <div id="hint-button-container" class="mb-4">
+                    <button onclick="useHint()" id="btn-hint" class="btn-neon text-yellow-400 border-yellow-500/50 hover:bg-yellow-500/20 text-sm">💡 Pedir Dica (-40pts)</button>
+                </div>
+
+                <!-- Hint Display Box -->
+                <div id="hint-display" class="hidden mb-6 p-4 bg-yellow-900/30 border border-yellow-500/50 rounded-lg text-yellow-200 text-sm font-fira">
+                </div>
+
                 <!-- Event Mode (Obstacles / Boosts) -->
                 <div id="event-mode-container" class="hidden space-y-4 text-center">
-                    <div class="text-6xl mb-4" id="event-icon">⚠️</div>
-                    <div id="event-result-text" class="text-3xl font-orbitron mb-6"></div>
-                    <button onclick="endTurn()" class="btn-neon btn-neon-pink px-8 py-3">CONTINUAR ➔</button>
+                    <div class="text-7xl mb-2 animate-bounce" id="event-icon">💥</div>
+                    <div id="event-title-banner" class="text-3xl font-black font-orbitron tracking-wider"></div>
+                    <div id="event-desc-text" class="text-lg text-gray-300 font-fira my-2 px-4"></div>
+                    <div id="event-result-text" class="text-4xl font-black font-orbitron my-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"></div>
+                    
+                    <div class="w-full bg-gray-900/80 rounded-full h-4 overflow-hidden border border-white/20 mb-6 p-0.5">
+                        <div id="event-graphic-bar" class="h-full rounded-full transition-all duration-1000 w-0"></div>
+                    </div>
+
+                    <button onclick="endTurn()" class="btn-neon btn-neon-pink px-8 py-3 text-lg font-orbitron">CONTINUAR ➔</button>
                 </div>
 
                 <!-- Input mode -->
                 <div id="input-mode-container" class="hidden space-y-4">
-                    <p class="text-sm text-gray-400 font-fira mb-2">Digite o comando ou palavra-chave exata:</p>
-                    <input type="text" id="challenge-input" class="terminal-input" placeholder="ex: COMMIT" autocomplete="off" spellcheck="false">
+                    <input type="text" id="challenge-input" class="terminal-input" placeholder="Digite a resposta..." autocomplete="off" spellcheck="false">
                     <div class="flex justify-end gap-4 mt-6">
-                        <button onclick="useHint()" id="btn-hint" class="btn-neon text-yellow-400 border-yellow-500/50 hover:bg-yellow-500/20 text-sm">💡 Dica (-40pts)</button>
-                        <button onclick="submitInputAnswer()" class="btn-neon btn-neon-cyan">EXECUTAR</button>
+                        <button onclick="submitInputAnswer()" class="btn-neon btn-neon-cyan w-full md:w-auto">EXECUTAR</button>
                     </div>
                 </div>
 
                 <!-- True/False mode -->
                 <div id="tf-mode-container" class="hidden space-y-4">
-                    <div class="grid grid-cols-2 gap-6 mt-6">
+                    <div class="grid grid-cols-2 gap-6 mt-4">
                         <button onclick="submitTFAnswer(true)" class="btn-neon btn-neon-green text-xl py-6">VERDADEIRO</button>
                         <button onclick="submitTFAnswer(false)" class="btn-neon btn-neon-red text-xl py-6">FALSO</button>
                     </div>
                 </div>
 
-                <!-- Hint Display -->
-                <div id="hint-display" class="hidden mt-6 p-4 bg-yellow-900/30 border border-yellow-500/50 rounded-lg text-yellow-200 text-sm font-fira">
-                </div>
-
                 <!-- Result Feedback -->
                 <div id="result-feedback" class="hidden mt-6 text-center p-6 rounded-lg font-bold text-2xl font-orbitron border-2">
                     <!-- Injected via JS -->
+                </div>
+
+                <!-- Interactive Explanation Toggle Button & Box -->
+                <div id="explanation-container" class="hidden mt-4 text-left">
+                    <button onclick="toggleExplanation()" id="btn-explain" class="btn-neon text-cyan-300 border-cyan-500/50 hover:bg-cyan-500/20 text-xs w-full py-2 mb-2 flex items-center justify-center gap-2">
+                        📖 EXPLICAR RESPOSTA
+                    </button>
+                    <div id="explanation-box" class="hidden p-4 bg-cyan-950/60 border border-cyan-500/40 rounded-xl text-cyan-100 text-sm font-fira leading-relaxed shadow-inner">
+                        <!-- Injected via JS -->
+                    </div>
                 </div>
                 
                 <div id="btn-continue" class="hidden mt-6 text-center">
@@ -279,12 +337,10 @@
             </div>
         </div>
 
-        <!-- ENDGAME MODAL (Hidden by default) -->
+        <!-- ENDGAME MODAL -->
         <div id="endgame-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/80 backdrop-blur-lg z-50 hidden">
             <div class="glass-panel p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-yellow-500 shadow-[0_0_50px_rgba(234,179,8,0.5)]">
-                <h2 class="text-4xl md:text-5xl font-orbitron font-bold text-yellow-400 mb-2 drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]">FIM DA SIMULAÇÃO</h2>
-                <p class="text-sm md:text-base text-cyan-300 font-orbitron uppercase tracking-widest mb-1">Chegar ao fim concede +500 pts bônus!</p>
-                <p class="text-lg text-gray-300 mb-6 font-semibold">🏆 O CAMPEÃO É DEFINIDO PELA PONTUAÇÃO FINAL 🏆</p>
+                <h2 class="text-4xl md:text-5xl font-orbitron font-bold text-yellow-400 mb-4 drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]">FIM DE JOGO</h2>
                 
                 <h3 class="text-xl font-bold text-white mb-4 border-b border-white/20 pb-2">CLASSIFICAÇÃO GERAL</h3>
                 
@@ -300,7 +356,6 @@
         <!-- BOTTOM BAR: Controls -->
         <div class="w-full p-6 interactive-ui flex flex-col md:flex-row justify-center items-center gap-6 bg-gradient-to-t from-black/80 to-transparent pb-8">
             <div id="turn-indicator" class="hidden text-center md:text-right">
-                <p class="text-gray-400 text-sm font-orbitron uppercase">Vez da Equipe</p>
                 <p id="current-team-display" class="text-2xl md:text-3xl font-bold font-orbitron" style="color: var(--neon-cyan)">Equipe X</p>
             </div>
             
@@ -316,7 +371,7 @@
 
     <!-- AUDIO ENGINE & GAME LOGIC -->
     <script>
-        // --- DATA & CONTENT ---
+        // --- DATA & CONTENT WITH DETAILED EXPLANATIONS ---
         const teamsData = [
             { id: 0, name: '🟢 Data Savers', color: 0x22c55e, hex: '#22c55e', score: 0, pos: 0 },
             { id: 1, name: '🔵 Commit Clan', color: 0x3b82f6, hex: '#3b82f6', score: 0, pos: 0 },
@@ -330,73 +385,85 @@
                 type: 'input',
                 q: "Qual comando INICIA uma transação no banco (começa o 'rascunho')?",
                 answer: ["begin", "begin;"],
-                hint: "Começa com a letra B. Significa 'início' em inglês."
+                hint: "Começa com a letra B. Significa 'início' em inglês.",
+                explanation: "O comando <b>BEGIN</b> inicia formalmente um bloco de transação. A partir deste momento, todas as alterações ficam em modo de 'rascunho' visíveis apenas para a sua própria sessão, até que sejam confirmadas com COMMIT ou descartadas com ROLLBACK."
             },
             {
                 type: 'input',
                 q: "Qual comando CONFIRMA a transação e salva os dados definitivamente?",
                 answer: ["commit", "commit;"],
-                hint: "Começa com a letra C. Depois dele, não tem mais volta."
+                hint: "Começa com a letra C. Depois dele, não tem mais volta.",
+                explanation: "O comando <b>COMMIT</b> confirma permanentemente as operações pendentes do bloco transacional no disco. Após o COMMIT, a alteração se torna durável e fica visível para todos os outros usuários do banco."
             },
             {
                 type: 'input',
                 q: "Qual comando CANCELA a transação e joga o 'rascunho' fora?",
                 answer: ["rollback", "rollback;"],
-                hint: "Significa 'rolar de volta' para o estado anterior."
+                hint: "Significa 'rolar de volta' para o estado anterior.",
+                explanation: "O comando <b>ROLLBACK</b> anula e descarta todas as alterações realizadas dentro da transação atual. O banco de dados retorna exatamente ao estado idêntico ao instante anterior à execução do comando BEGIN."
             },
             {
                 type: 'input',
                 q: "Qual comando cria um PONTO DE SALVAMENTO intermediário durante a transação?",
                 answer: ["savepoint", "savepoint;"],
-                hint: "É a junção das palavras 'salvar' e 'ponto' em inglês."
+                hint: "É a junção das palavras 'salvar' e 'ponto' em inglês.",
+                explanation: "O <b>SAVEPOINT</b> marca uma estaca intermediária na transação. Isso permite desfazer apenas parte do trabalho com ROLLBACK TO SAVEPOINT sem perder o que já havia sido processado com sucesso anteriormente."
             },
             {
                 type: 'input',
                 q: "Qual ferramenta usamos no terminal (psql) para importar ou exportar dados de uma planilha/arquivo de texto?",
                 answer: ["\\copy", "copy", "\\copy;", "copy;"],
-                hint: "Significa 'copiar' em inglês. No terminal, usamos com uma contrabarra (\\) antes."
+                hint: "Significa 'copiar' em inglês. No terminal, usamos com uma contrabarra (\\) antes.",
+                explanation: "O meta-comando <b>\\copy</b> executa no lado do cliente psql. Diferente do COPY SQL puro, o \\copy lê e grava arquivos de texto/CSV direto no computador do próprio usuário."
             },
             {
                 type: 'input',
                 q: "Qual comando faz o BACKUP (exportação) de um banco de dados inteiro?",
                 answer: ["pg_dump", "pg dump"],
-                hint: "Tem o prefixo 'pg_' e a palavra 'despejar' (dump) em inglês."
+                hint: "Tem o prefixo 'pg_' e a palavra 'despejar' (dump) em inglês.",
+                explanation: "O <b>pg_dump</b> é o utilitário nativo de backup lógico do PostgreSQL. Ele tira uma foto consistente dos dados sem bloquear leituras ou escritas que estejam ocorrendo simultaneamente."
             },
             {
                 type: 'tf',
                 q: "O comando COMMIT pode ser desfeito usando o comando ROLLBACK logo em seguida.",
                 answer: false,
-                hint: "Pense bem: o que significa tornar algo 'definitivo' e 'durável'?"
+                hint: "Lembre-se: o COMMIT grava os dados permanentemente no disco.",
+                explanation: "<b>FALSO!</b> Uma vez executado o COMMIT, os dados são gravados permanentemente no banco. O ROLLBACK só funciona enquanto a transação estiver aberta (antes do COMMIT)."
             },
             {
                 type: 'tf',
                 q: "Se um cartão for recusado ao final de um pedido, o comando ROLLBACK garante que o item devolvido volte para o estoque (atomicidade).",
                 answer: true,
-                hint: "A transação garante que é 'tudo ou nada'."
+                hint: "A propriedade da Atomicidade diz que ou tudo acontece, ou nada é gravado.",
+                explanation: "<b>VERDADEIRO!</b> O princípio da <i>Atomicidade</i> garante que uma transação aconteça por inteiro ou não aconteça nada ('tudo ou nada'). Se o pagamento falhar, o ROLLBACK reverte a baixa no estoque automaticamente."
             },
             {
                 type: 'tf',
                 q: "O comando ROLLBACK TO desfaz apenas até o ponto de salvamento escolhido, mantendo os itens que já tinham dado certo antes.",
                 answer: true,
-                hint: "Essa é exatamente a principal vantagem de usar pontos de salvamento em transações longas."
+                hint: "Essa é a utilidade prática do SAVEPOINT em compras de múltiplos itens.",
+                explanation: "<b>VERDADEIRO!</b> O comando ROLLBACK TO SAVEPOINT cancela apenas o trecho de código executado após o ponto marcado, preservando o progresso transacional anterior até o desfecho final com o COMMIT."
             },
             {
                 type: 'input',
                 q: "Qual comando RESTAURA um backup criado no formato customizado ou diretório?",
                 answer: ["pg_restore", "pg restore"],
-                hint: "Tem o prefixo 'pg_' e a palavra 'restaurar' em inglês."
+                hint: "Tem o prefixo 'pg_' e a palavra 'restaurar' em inglês.",
+                explanation: "O utilitário <b>pg_restore</b> pega os arquivos comprimidos (.dump/.dir) gerados pelo pg_dump e reconstrói o banco de dados."
             },
             {
                 type: 'tf',
                 q: "Arquivos CSV são muito pesados e só podem ser abertos por programas específicos de banco de dados.",
                 answer: false,
-                hint: "Lembre-se: CSV é apenas texto simples separado por vírgulas."
+                hint: "CSV é uma sigla para valores separados por vírgulas em texto puro.",
+                explanation: "<b>FALSO!</b> O CSV (Comma-Separated Values) é um formato de texto simples e extremamente leve. Ele pode ser aberto em qualquer bloco de notas ou softwares de planilha."
             },
             {
                 type: 'input',
                 q: "Qual a sigla do arquivo de texto simples usado para trocar dados, onde os valores são separados por vírgula?",
                 answer: ["csv", ".csv"],
-                hint: "São apenas 3 letras (Comma-Separated Values)."
+                hint: "São apenas 3 letras (Comma-Separated Values).",
+                explanation: "<b>CSV</b> significa 'Comma-Separated Values'. É o formato padrão universal mais utilizado para migração e troca rápida de dados."
             }
         ];
 
@@ -412,7 +479,7 @@
         let countdownTimer = null;
         let timeLeft = 45;
 
-        // --- MAP GENERATION (OBSTACLES & BOOSTS) ---
+        // --- MAP GENERATION ---
         const tileData = new Array(BOARD_SIZE).fill('normal');
         tileData[4] = 'trap'; tileData[10] = 'trap'; tileData[16] = 'trap'; tileData[21] = 'trap';
         tileData[7] = 'boost'; tileData[14] = 'boost'; tileData[19] = 'boost';
@@ -452,13 +519,13 @@
                 gain.gain.setValueAtTime(0.1, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
                 osc.start(now); osc.stop(now + 0.4);
-            } else if (type === 'wrong') {
+            } else if (type === 'wrong' || type === 'explosion') {
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, now);
-                osc.frequency.exponentialRampToValueAtTime(80, now + 0.3);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now); osc.stop(now + 0.3);
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.5);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                osc.start(now); osc.stop(now + 0.5);
             } else if (type === 'win') {
                 osc.type = 'sine';
                 [523, 659, 783, 1046].forEach((f, i) => {
@@ -480,38 +547,52 @@
             }
         }
 
-        // --- THREE.JS SETUP ---
+        // --- THREE.JS SETUP WITH HIGH QUALITY GRAPHICS ---
         let scene, camera, renderer;
         let pieceMeshes = [];
         let galaxy;
+        let activeParticles = []; // For explosion particle systems
+        let cameraTargetPos = new THREE.Vector3(0, 32, 42);
+        let cameraLookTarget = new THREE.Vector3(0, 0, 2);
+        let currentCamPos = new THREE.Vector3(0, 32, 42);
+        let currentCamLook = new THREE.Vector3(0, 0, 2);
 
         function init3D() {
             const canvas = document.getElementById('game-canvas');
             scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x0a0118, 0.012);
+            scene.fog = new THREE.FogExp2(0x06020e, 0.01);
 
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.set(0, 32, 42);
             camera.lookAt(0, 0, 2);
 
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-            const ambient = new THREE.AmbientLight(0xffffff, 0.35);
+            // Iluminação Visual Aprimorada
+            const ambient = new THREE.AmbientLight(0xffffff, 0.45);
             scene.add(ambient);
             
-            const pLight1 = new THREE.PointLight(0xec4899, 2.5, 120);
-            pLight1.position.set(-15, 25, 15);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(20, 40, 20);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 1024;
+            dirLight.shadow.mapSize.height = 1024;
+            scene.add(dirLight);
+
+            const pLight1 = new THREE.PointLight(0xec4899, 3.5, 150);
+            pLight1.position.set(-18, 30, 18);
             scene.add(pLight1);
             
-            const pLight2 = new THREE.PointLight(0x38bdf8, 2.5, 120);
-            pLight2.position.set(15, 25, -15);
+            const pLight2 = new THREE.PointLight(0x38bdf8, 3.5, 150);
+            pLight2.position.set(18, 30, -18);
             scene.add(pLight2);
 
-            const pLightCenter = new THREE.PointLight(0xa855f7, 2, 80);
-            pLightCenter.position.set(0, 10, 0);
+            const pLightCenter = new THREE.PointLight(0xa855f7, 3.0, 100);
+            pLightCenter.position.set(0, 15, 0);
             scene.add(pLightCenter);
 
             buildBoard();
@@ -542,19 +623,21 @@
                 const mat = new THREE.MeshStandardMaterial({ 
                     color: color, 
                     emissive: emissive,
-                    roughness: 0.15,
-                    metalness: 0.85
+                    roughness: 0.1,
+                    metalness: 0.9
                 });
                 
                 const tile = new THREE.Mesh(tileGeo, mat);
                 tile.position.copy(boardPath[i]);
                 tile.position.y = Math.sin(i * 0.3) * 0.2;
+                tile.receiveShadow = true;
+                tile.castShadow = true;
                 
                 const rimGeo = new THREE.BoxGeometry(3.4, 0.2, 3.4);
                 const rimMat = new THREE.MeshStandardMaterial({ 
                     color: color, 
                     emissive: color, 
-                    emissiveIntensity: 0.8 
+                    emissiveIntensity: 0.9 
                 });
                 const rimTile = new THREE.Mesh(rimGeo, rimMat);
                 rimTile.position.copy(tile.position);
@@ -578,9 +661,9 @@
         }
 
         function buildPieces() {
-            const baseGeo = new THREE.CylinderGeometry(0.9, 1.1, 0.4, 16);
-            const bodyGeo = new THREE.ConeGeometry(0.7, 2.0, 16);
-            const headGeo = new THREE.SphereGeometry(0.5, 16, 16);
+            const baseGeo = new THREE.CylinderGeometry(0.9, 1.1, 0.4, 32);
+            const bodyGeo = new THREE.ConeGeometry(0.7, 2.0, 32);
+            const headGeo = new THREE.SphereGeometry(0.5, 32, 32);
             
             bodyGeo.translate(0, 1.2, 0);
             headGeo.translate(0, 2.3, 0);
@@ -589,9 +672,9 @@
                 const mat = new THREE.MeshStandardMaterial({ 
                     color: team.color,
                     emissive: team.color,
-                    emissiveIntensity: 0.6,
-                    roughness: 0.1,
-                    metalness: 0.9
+                    emissiveIntensity: 0.7,
+                    roughness: 0.05,
+                    metalness: 0.95
                 });
 
                 const pawn = new THREE.Group();
@@ -599,6 +682,10 @@
                 const bodyMesh = new THREE.Mesh(bodyGeo, mat);
                 const headMesh = new THREE.Mesh(headGeo, mat);
                 
+                baseMesh.castShadow = true;
+                bodyMesh.castShadow = true;
+                headMesh.castShadow = true;
+
                 pawn.add(baseMesh);
                 pawn.add(bodyMesh);
                 pawn.add(headMesh);
@@ -619,29 +706,35 @@
         }
 
         function createGalaxy() {
-            const particleCount = 6000;
+            const particleCount = 8000;
             const geo = new THREE.BufferGeometry();
             const pos = new Float32Array(particleCount * 3);
             const colors = new Float32Array(particleCount * 3);
             
             const colorPink = new THREE.Color(0xec4899);
             const colorPurple = new THREE.Color(0xa855f7);
-            const colorLightPink = new THREE.Color(0xfbcfe8);
+            const colorCyan = new THREE.Color(0x38bdf8);
+            const colorYellow = new THREE.Color(0xeab308);
             
             for(let i = 0; i < particleCount; i++) {
-                const r = Math.random() * 90;
-                const branch = i % 4;
-                const theta = (branch * ((Math.PI * 2) / 4)) + (r * 0.05) + (Math.random() * 0.8 - 0.4);
+                const r = Math.random() * 140 + 30;
+                const branch = i % 5;
+                const theta = (branch * ((Math.PI * 2) / 5)) + (r * 0.04) + (Math.random() * 0.6 - 0.3);
                 
                 const x = Math.cos(theta) * r;
-                const y = (Math.random() - 0.5) * 12 * (1 - r/100);
-                const z = Math.sin(theta) * r;
+                const y = (Math.random() - 0.5) * 25 - 30;
+                const z = Math.sin(theta) * r - 40;
                 
                 pos[i*3] = x;
-                pos[i*3+1] = y - 10;
-                pos[i*3+2] = z - 20;
+                pos[i*3+1] = y;
+                pos[i*3+2] = z;
 
-                const mixedColor = colorPink.clone().lerp(Math.random() > 0.5 ? colorPurple : colorLightPink, Math.random());
+                const randVal = Math.random();
+                let mixedColor = colorPink.clone();
+                if (randVal > 0.75) mixedColor = colorCyan.clone();
+                else if (randVal > 0.5) mixedColor = colorPurple.clone();
+                else if (randVal > 0.25) mixedColor = colorYellow.clone();
+
                 colors[i*3] = mixedColor.r;
                 colors[i*3+1] = mixedColor.g;
                 colors[i*3+2] = mixedColor.b;
@@ -651,45 +744,134 @@
             geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
             
             const mat = new THREE.PointsMaterial({ 
-                size: 0.35, 
+                size: 0.4, 
                 vertexColors: true, 
                 transparent: true, 
-                opacity: 0.8,
+                opacity: 0.45, 
                 blending: THREE.AdditiveBlending 
             });
             
             galaxy = new THREE.Points(geo, mat);
-            galaxy.rotation.x = Math.PI / 8;
+            galaxy.rotation.x = Math.PI / 5;
             scene.add(galaxy);
         }
 
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        // --- 3D EXPLOSION EFFECT FOR LOSS / TRAPS ---
+        function create3DExplosion(position) {
+            playSound('explosion');
+            const particleCount = 120;
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const velocities = [];
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = position.x;
+                positions[i * 3 + 1] = position.y + 0.5;
+                positions[i * 3 + 2] = position.z;
+
+                velocities.push(new THREE.Vector3(
+                    (Math.random() - 0.5) * 1.5,
+                    Math.random() * 1.8 + 0.5,
+                    (Math.random() - 0.5) * 1.5
+                ));
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const mat = new THREE.PointsMaterial({
+                color: 0xef4444,
+                size: 0.6,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending
+            });
+
+            const pSystem = new THREE.Points(geo, mat);
+            scene.add(pSystem);
+
+            activeParticles.push({
+                system: pSystem,
+                velocities: velocities,
+                life: 1.0
+            });
+        }
+
+        function updateExplosions() {
+            for (let i = activeParticles.length - 1; i >= 0; i--) {
+                const item = activeParticles[i];
+                item.life -= 0.03;
+
+                if (item.life <= 0) {
+                    scene.remove(item.system);
+                    item.system.geometry.dispose();
+                    item.system.material.dispose();
+                    activeParticles.splice(i, 1);
+                    continue;
+                }
+
+                item.system.material.opacity = item.life;
+                const posArr = item.system.geometry.attributes.position.array;
+
+                for (let j = 0; j < item.velocities.length; j++) {
+                    posArr[j * 3] += item.velocities[j].x;
+                    posArr[j * 3 + 1] += item.velocities[j].y;
+                    posArr[j * 3 + 2] += item.velocities[j].z;
+
+                    item.velocities[j].y -= 0.05; // Gravity
+                }
+
+                item.system.geometry.attributes.position.needsUpdate = true;
+            }
+        }
+
+        function triggerRollZoom() {
+            const team = teamsData[currentTeamIndex];
+            const pawnMesh = pieceMeshes[currentTeamIndex];
+            
+            if (pawnMesh) {
+                const targetTilePos = boardPath[team.pos];
+                cameraTargetPos.set(targetTilePos.x, 12, targetTilePos.z + 14);
+                cameraLookTarget.set(targetTilePos.x, 1, targetTilePos.z);
+            }
+        }
+
+        function trackMovingPawn(pawnPosition) {
+            cameraTargetPos.set(pawnPosition.x, 12, pawnPosition.z + 14);
+            cameraLookTarget.set(pawnPosition.x, 1, pawnPosition.z);
+        }
+
+        function resetCameraView() {
+            cameraTargetPos.set(0, 32, 42);
+            cameraLookTarget.set(0, 0, 2);
         }
 
         function animate3D() {
             requestAnimationFrame(animate3D);
             
-            const time = Date.now() * 0.0005;
-            camera.position.x = Math.sin(time) * 4;
-            camera.position.z = 42 + Math.cos(time * 0.8) * 3;
-            camera.lookAt(0, 0, 2);
+            const time = Date.now() * 0.0008;
+
+            currentCamPos.lerp(cameraTargetPos, 0.05);
+            currentCamLook.lerp(cameraLookTarget, 0.05);
+
+            camera.position.x = currentCamPos.x + Math.sin(time) * 1.5;
+            camera.position.y = currentCamPos.y + Math.cos(time * 0.7) * 0.8;
+            camera.position.z = currentCamPos.z + Math.cos(time * 0.8) * 1.2;
+            camera.lookAt(currentCamLook);
 
             if (galaxy) {
                 galaxy.rotation.y += 0.0015;
-                galaxy.rotation.z = Math.sin(time * 0.5) * 0.05;
             }
             
+            updateExplosions();
+
             if (!isMoving) {
                 pieceMeshes.forEach((mesh, idx) => {
                     const offset = getPieceOffset(idx);
                     const targetPos = boardPath[teamsData[idx].pos].clone().add(offset);
                     
                     if (idx === currentTeamIndex) {
-                        mesh.rotation.y += 0.04;
-                        mesh.position.y = targetPos.y + 0.6 + Math.sin(Date.now() * 0.006) * 0.4;
+                        mesh.rotation.y += 0.05;
+                        mesh.position.y = targetPos.y + 0.6 + Math.sin(Date.now() * 0.008) * 0.4;
                     } else {
                         mesh.rotation.y = 0;
                         mesh.position.y = targetPos.y;
@@ -704,43 +886,321 @@
 
         // --- GAME LOGIC ---
 
-        function updateScoreboard() {
-            const list = document.getElementById('scoreboard-list');
-            list.innerHTML = '';
-            
-            const sortedTeams = [...teamsData].sort((a, b) => {
-                if (b.score === a.score) return b.pos - a.pos;
-                return b.score - a.score;
-            });
-
-            sortedTeams.forEach((t, i) => {
-                const isCurrent = t.id === currentTeamIndex;
-                const html = `
-                    <div class="score-row flex justify-between items-center p-2 rounded ${isCurrent ? 'active-turn' : ''}">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold text-gray-500 w-4">${i+1}º</span>
-                            <div class="w-3 h-3 rounded-full" style="background-color: ${t.hex}; box-shadow: 0 0 5px ${t.hex}"></div>
-                            <span class="text-sm font-semibold truncate w-24 md:w-32" style="${isCurrent ? 'color: white' : 'color: #ccc'}">${t.name}</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs text-gray-400">P:${t.pos}</span>
-                            <span class="ml-2 font-bold font-fira text-yellow-400">${t.score}</span>
-                        </div>
-                    </div>
-                `;
-                list.insertAdjacentHTML('beforeend', html);
-            });
+        function onWindowResize() {
+            if (!camera || !renderer) return;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
-        function startGame() {
+        function startTimer() {
+            clearInterval(countdownTimer);
+            timeLeft = 45;
+            const timerEl = document.getElementById('challenge-timer');
+            timerEl.classList.remove('hidden', 'border-red-500', 'text-red-500');
+            timerEl.classList.add('border-cyan-500', 'text-cyan-400');
+            timerEl.innerText = timeLeft;
+
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+
+                if (timeLeft <= 10) {
+                    playSound('tick');
+                    timerEl.classList.remove('border-cyan-500', 'text-cyan-400');
+                    timerEl.classList.add('border-red-500', 'text-red-500');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function rollDice() {
+            if (isMoving) return;
             initAudio();
-            document.getElementById('start-screen').classList.add('hidden');
+
+            const btn = document.getElementById('btn-roll-dice');
+            btn.disabled = true;
+
+            triggerRollZoom();
+
+            const diceEl = document.getElementById('dice-result');
+            let rollCount = 0;
             
-            document.getElementById('turn-indicator').classList.remove('hidden');
-            document.getElementById('btn-roll-dice').classList.remove('hidden');
-            document.getElementById('dice-result').classList.remove('hidden');
-            
+            const rollInterval = setInterval(() => {
+                const tempRoll = Math.floor(Math.random() * 3) + 1;
+                diceEl.innerText = tempRoll;
+                playSound('roll');
+                rollCount++;
+
+                if (rollCount > 8) {
+                    clearInterval(rollInterval);
+                    const finalRoll = Math.floor(Math.random() * 3) + 1;
+                    diceEl.innerText = finalRoll;
+                    movePieceStepByStep(finalRoll);
+                }
+            }, 80);
+        }
+
+        function movePieceStepByStep(stepsRemaining) {
+            isMoving = true;
+            const team = teamsData[currentTeamIndex];
+            const pawnMesh = pieceMeshes[currentTeamIndex];
+
+            if (stepsRemaining <= 0 || team.pos >= BOARD_SIZE - 1) {
+                isMoving = false;
+
+                if (pawnMesh) {
+                    trackMovingPawn(pawnMesh.position);
+                }
+
+                if (team.pos >= BOARD_SIZE - 1) {
+                    team.pos = BOARD_SIZE - 1;
+                    team.score += 50;
+                    updateScoreboard();
+                    triggerEndGame();
+                    return;
+                }
+
+                setTimeout(() => {
+                    const tileType = tileData[team.pos];
+                    if (tileType === 'trap') {
+                        // Trigger 3D Explosion when landing on Trap
+                        if (pawnMesh) create3DExplosion(pawnMesh.position);
+                        triggerEventModal('trap', 'FALHA DE ENERGIA!', 'O servidor reiniciou e corrompeu a transação!', -50);
+                    } else if (tileType === 'boost') {
+                        triggerEventModal('boost', 'BACKUP CONCLUÍDO!', 'Exportação rápida finalizada com sucesso via \\copy!', 50);
+                    } else {
+                        triggerChallenge();
+                    }
+                }, 400);
+                return;
+            }
+
+            team.pos++;
+            playSound('move');
             updateScoreboard();
+
+            if (pawnMesh) {
+                const offset = getPieceOffset(currentTeamIndex);
+                const nextTilePos = boardPath[team.pos].clone().add(offset);
+                pawnMesh.position.copy(nextTilePos);
+                trackMovingPawn(pawnMesh.position);
+            }
+
+            setTimeout(() => {
+                movePieceStepByStep(stepsRemaining - 1);
+            }, 450);
+        }
+
+        function triggerEventModal(type, title, desc, pointDelta) {
+            clearInterval(countdownTimer);
+            const modal = document.getElementById('challenge-modal');
+            const box = document.getElementById('challenge-box');
+            
+            document.getElementById('challenge-team-name').innerText = teamsData[currentTeamIndex].name;
+            document.getElementById('challenge-team-name').style.color = teamsData[currentTeamIndex].hex;
+            document.getElementById('challenge-question').innerText = "";
+            document.getElementById('hint-button-container').classList.add('hidden');
+            document.getElementById('hint-display').classList.add('hidden');
+            document.getElementById('input-mode-container').classList.add('hidden');
+            document.getElementById('tf-mode-container').classList.add('hidden');
+            document.getElementById('result-feedback').classList.add('hidden');
+            document.getElementById('explanation-container').classList.add('hidden');
+            document.getElementById('btn-continue').classList.add('hidden');
+            document.getElementById('points-badge').classList.add('hidden');
+            document.getElementById('challenge-timer').classList.add('hidden');
+
+            const eventContainer = document.getElementById('event-mode-container');
+            const eventIcon = document.getElementById('event-icon');
+            const eventTitle = document.getElementById('event-title-banner');
+            const eventDesc = document.getElementById('event-desc-text');
+            const eventResult = document.getElementById('event-result-text');
+            const graphicBar = document.getElementById('event-graphic-bar');
+
+            eventContainer.classList.remove('hidden');
+
+            if (type === 'trap') {
+                box.className = "glass-panel p-8 md:p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-red-500 shadow-[0_0_50px_rgba(239,68,68,0.5)] animate-shake";
+                eventIcon.innerText = "💥";
+                eventTitle.innerText = title;
+                eventTitle.className = "text-3xl font-black font-orbitron tracking-wider text-red-500";
+                eventDesc.innerText = desc;
+                eventResult.innerText = `${pointDelta} PTS!`;
+                eventResult.className = "text-4xl font-black font-orbitron my-4 text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]";
+                
+                graphicBar.style.width = "100%";
+                graphicBar.className = "h-full rounded-full transition-all duration-1000 bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.8)]";
+                setTimeout(() => { graphicBar.style.width = "0%"; }, 100);
+            } else {
+                playSound('correct');
+                box.className = "glass-panel p-8 md:p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-green-500 shadow-[0_0_50px_rgba(34,197,94,0.5)] animate-pop";
+                eventIcon.innerText = "🎁";
+                eventTitle.innerText = title;
+                eventTitle.className = "text-3xl font-black font-orbitron tracking-wider text-green-400";
+                eventDesc.innerText = desc;
+                eventResult.innerText = `+${pointDelta} PTS!`;
+                eventResult.className = "text-4xl font-black font-orbitron my-4 text-green-400 drop-shadow-[0_0_15px_rgba(34,197,94,0.8)]";
+                
+                graphicBar.style.width = "0%";
+                graphicBar.className = "h-full rounded-full transition-all duration-1000 bg-green-500 shadow-[0_0_15px_rgba(34,197,94,0.8)]";
+                setTimeout(() => { graphicBar.style.width = "100%"; }, 100);
+            }
+
+            teamsData[currentTeamIndex].score += pointDelta;
+            updateScoreboard();
+            modal.classList.remove('hidden');
+        }
+
+        function triggerChallenge() {
+            if (shuffledChallenges.length === 0) {
+                shuffledChallenges = [...challenges].sort(() => Math.random() - 0.5);
+            }
+
+            currentChallenge = shuffledChallenges.pop();
+            currentPointsVal = 100;
+
+            const modal = document.getElementById('challenge-modal');
+            const box = document.getElementById('challenge-box');
+            box.className = "glass-panel p-8 md:p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-cyan-500 shadow-[0_0_40px_rgba(56,189,248,0.3)] transition-all duration-300 scale-100";
+
+            document.getElementById('event-mode-container').classList.add('hidden');
+            document.getElementById('points-badge').classList.remove('hidden');
+            document.getElementById('challenge-team-name').innerText = teamsData[currentTeamIndex].name;
+            document.getElementById('challenge-team-name').style.color = teamsData[currentTeamIndex].hex;
+            document.getElementById('challenge-question').innerText = currentChallenge.q;
+            document.getElementById('challenge-points').innerText = currentPointsVal;
+
+            const btnHint = document.getElementById('btn-hint');
+            btnHint.disabled = false;
+            document.getElementById('hint-button-container').classList.remove('hidden');
+            document.getElementById('hint-display').classList.add('hidden');
+            document.getElementById('result-feedback').classList.add('hidden');
+            document.getElementById('btn-continue').classList.add('hidden');
+            
+            document.getElementById('explanation-container').classList.add('hidden');
+            document.getElementById('explanation-box').classList.add('hidden');
+
+            if (currentChallenge.type === 'input') {
+                document.getElementById('input-mode-container').classList.remove('hidden');
+                document.getElementById('tf-mode-container').classList.add('hidden');
+                const inp = document.getElementById('challenge-input');
+                inp.value = '';
+                inp.disabled = false;
+                setTimeout(() => inp.focus(), 100);
+            } else {
+                document.getElementById('input-mode-container').classList.add('hidden');
+                document.getElementById('tf-mode-container').classList.remove('hidden');
+                const tfBtns = document.querySelectorAll('#tf-mode-container button');
+                tfBtns.forEach(b => b.disabled = false);
+            }
+
+            modal.classList.remove('hidden');
+            startTimer();
+        }
+
+        function useHint() {
+            if (!currentChallenge || !currentChallenge.hint) return;
+            initAudio();
+            playSound('tick');
+
+            currentPointsVal = 60;
+            document.getElementById('challenge-points').innerText = currentPointsVal;
+            
+            const hintBox = document.getElementById('hint-display');
+            hintBox.innerText = `💡 DICA: ${currentChallenge.hint}`;
+            hintBox.classList.remove('hidden');
+            
+            document.getElementById('btn-hint').disabled = true;
+        }
+
+        function submitInputAnswer() {
+            clearInterval(countdownTimer);
+            initAudio();
+            const rawVal = document.getElementById('challenge-input').value.trim().toLowerCase();
+            const isValid = currentChallenge.answer.includes(rawVal);
+            
+            document.getElementById('challenge-input').disabled = true;
+            showResult(isValid);
+        }
+
+        function submitTFAnswer(userChoice) {
+            clearInterval(countdownTimer);
+            initAudio();
+            const isValid = (userChoice === currentChallenge.answer);
+            
+            const tfBtns = document.querySelectorAll('#tf-mode-container button');
+            tfBtns.forEach(b => b.disabled = true);
+            showResult(isValid);
+        }
+
+        function handleTimeout() {
+            initAudio();
+            document.getElementById('challenge-input').disabled = true;
+            const tfBtns = document.querySelectorAll('#tf-mode-container button');
+            tfBtns.forEach(b => b.disabled = true);
+
+            showResult(false, true);
+        }
+
+        function showResult(isCorrect, isTimeout = false) {
+            document.getElementById('btn-hint').disabled = true;
+            const resBox = document.getElementById('result-feedback');
+            const boxModal = document.getElementById('challenge-box');
+            resBox.classList.remove('hidden');
+
+            if (isCorrect) {
+                playSound('correct');
+                teamsData[currentTeamIndex].score += currentPointsVal;
+                updateScoreboard();
+
+                boxModal.className = "glass-panel p-8 md:p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-green-500 shadow-[0_0_50px_rgba(34,197,94,0.6)] animate-pop";
+                resBox.className = "mt-6 text-center p-6 rounded-xl font-bold text-2xl font-orbitron border-2 bg-green-950/80 border-green-500 text-green-300 shadow-[0_0_20px_rgba(34,197,94,0.4)]";
+                resBox.innerHTML = `✅ RESPOSTA CORRETA!<br><span class="text-lg font-fira font-normal text-green-200">+${currentPointsVal} PONTOS REGISTRADOS!</span>`;
+            } else {
+                // Trigger 3D Explosion particle effect on the pawn location when answering wrong
+                const pawnMesh = pieceMeshes[currentTeamIndex];
+                if (pawnMesh) create3DExplosion(pawnMesh.position);
+
+                boxModal.className = "glass-panel p-8 md:p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-red-500 shadow-[0_0_50px_rgba(239,68,68,0.7)] animate-glitch-error";
+                resBox.className = "mt-6 text-center p-6 rounded-xl font-bold text-xl font-orbitron border-2 bg-red-950/80 border-red-500 text-red-300 shadow-[0_0_20px_rgba(239,68,68,0.5)]";
+                
+                const correctAnsText = Array.isArray(currentChallenge.answer) ? currentChallenge.answer[0].toUpperCase() : (currentChallenge.answer ? "VERDADEIRO" : "FALSO");
+                
+                if (isTimeout) {
+                    resBox.innerHTML = `⏱️ TEMPO ESGOTADO!<br><span class="text-sm font-fira text-red-200 mt-2 block">Resposta correta: <b>${correctAnsText}</b></span>`;
+                } else {
+                    resBox.innerHTML = `❌ ERRO DE SINTAXE!<br><span class="text-sm font-fira text-red-200 mt-2 block">A resposta correta era: <b>${correctAnsText}</b></span>`;
+                }
+            }
+
+            if (currentChallenge && currentChallenge.explanation) {
+                const expBox = document.getElementById('explanation-box');
+                expBox.innerHTML = currentChallenge.explanation;
+                document.getElementById('explanation-container').classList.remove('hidden');
+            }
+
+            document.getElementById('btn-continue').classList.remove('hidden');
+        }
+
+        function toggleExplanation() {
+            initAudio();
+            playSound('tick');
+            const box = document.getElementById('explanation-box');
+            box.classList.toggle('hidden');
+        }
+
+        function endTurn() {
+            clearInterval(countdownTimer);
+            document.getElementById('challenge-modal').classList.add('hidden');
+            document.getElementById('btn-roll-dice').disabled = false;
+
+            resetCameraView();
+
+            currentTeamIndex = (currentTeamIndex + 1) % teamsData.length;
             updateTurnUI();
         }
 
@@ -749,408 +1209,80 @@
             const display = document.getElementById('current-team-display');
             display.innerText = team.name;
             display.style.color = team.hex;
-            display.style.textShadow = `0 0 10px ${team.hex}`;
-            
-            document.getElementById('btn-roll-dice').disabled = false;
-            document.getElementById('dice-result').innerText = "-";
-            updateScoreboard();
+
+            document.querySelectorAll('.score-row').forEach(row => row.classList.remove('active-turn'));
+            const activeRow = document.getElementById(`score-row-${team.id}`);
+            if (activeRow) activeRow.classList.add('active-turn');
         }
 
-        function rollDice() {
-            initAudio();
-            document.getElementById('btn-roll-dice').disabled = true;
-            
-            let rolls = 0;
-            const maxRolls = 10;
-            const resultBox = document.getElementById('dice-result');
-            
-            const rollInterval = setInterval(() => {
-                playSound('roll');
-                const tempVal = Math.floor(Math.random() * 3) + 1;
-                resultBox.innerText = tempVal;
-                rolls++;
-                
-                if (rolls >= maxRolls) {
-                    clearInterval(rollInterval);
-                    const finalRoll = Math.floor(Math.random() * 3) + 1;
-                    resultBox.innerText = finalRoll;
-                    resultBox.style.color = 'var(--neon-yellow)';
-                    resultBox.style.borderColor = 'var(--neon-yellow)';
-                    
-                    setTimeout(() => movePiece(finalRoll), 500);
-                }
-            }, 100);
-        }
+        function updateScoreboard() {
+            const list = document.getElementById('scoreboard-list');
+            list.innerHTML = '';
 
-        function movePiece(steps) {
-            isMoving = true;
-            const team = teamsData[currentTeamIndex];
-            const mesh = pieceMeshes[currentTeamIndex];
-            let currentStep = 0;
+            const sorted = [...teamsData].sort((a, b) => b.score - a.score || b.pos - a.pos);
 
-            function stepAnimation() {
-                if (currentStep < steps && team.pos < BOARD_SIZE - 1) {
-                    team.pos++;
-                    playSound('move');
-                    
-                    const offset = getPieceOffset(currentTeamIndex);
-                    const target = boardPath[team.pos].clone().add(offset);
-                    
-                    const dur = 400;
-                    const startT = Date.now();
-                    const startPos = mesh.position.clone();
-                    
-                    function animFrame() {
-                        const t = (Date.now() - startT) / dur;
-                        if (t < 1) {
-                            mesh.position.lerpVectors(startPos, target, t);
-                            mesh.position.y += Math.sin(t * Math.PI) * 2;
-                            requestAnimationFrame(animFrame);
-                        } else {
-                            mesh.position.copy(target);
-                            currentStep++;
-                            setTimeout(stepAnimation, 100);
-                        }
-                    }
-                    animFrame();
-                } else {
-                    isMoving = false;
-                    updateScoreboard();
-                    
-                    if (team.pos >= BOARD_SIZE - 1) {
-                        // Sem bônus de pontos ao chegar no final e transição direta
-                        triggerEndGame();
-                    } else {
-                        const currentTileType = tileData[team.pos];
-                        if (currentTileType === 'trap') {
-                            setTimeout(() => triggerEventModal('trap', 'FALHA DE ENERGIA!', 'O servidor reiniciou inesperadamente. O ROLLBACK foi acionado.', -50), 500);
-                        } else if (currentTileType === 'boost') {
-                            setTimeout(() => triggerEventModal('boost', 'BACKUP CONCLUÍDO!', 'O pg_dump salvou o dia antes do prazo.', 50), 500);
-                        } else {
-                            setTimeout(triggerChallenge, 500);
-                        }
-                    }
-                }
-            }
-            stepAnimation();
-        }
-
-        function triggerEventModal(type, title, desc, points) {
-            const team = teamsData[currentTeamIndex];
-            document.getElementById('challenge-team-name').innerText = team.name;
-            document.getElementById('challenge-team-name').style.color = team.hex;
-            
-            document.getElementById('points-badge').classList.add('hidden');
-            document.getElementById('challenge-timer').classList.add('hidden');
-            
-            document.getElementById('challenge-question').innerHTML = `<span class="${type === 'trap' ? 'text-red-500' : 'text-green-500'} font-bold">${title}</span><br><span class="text-lg font-light text-gray-300 mt-2 block">${desc}</span>`;
-            
-            document.getElementById('input-mode-container').classList.add('hidden');
-            document.getElementById('tf-mode-container').classList.add('hidden');
-            document.getElementById('result-feedback').classList.add('hidden');
-            document.getElementById('btn-continue').classList.add('hidden');
-            
-            const eventContainer = document.getElementById('event-mode-container');
-            eventContainer.classList.remove('hidden');
-            
-            const eventResult = document.getElementById('event-result-text');
-            const icon = document.getElementById('event-icon');
-            
-            if (type === 'trap') {
-                playSound('wrong');
-                icon.innerText = "💥";
-                team.score = Math.max(0, team.score + points);
-                eventResult.innerHTML = `<span class="text-red-400 font-bold">${points} PTS</span>`;
-                document.getElementById('challenge-box').classList.add('border-red-500');
-            } else {
-                playSound('correct');
-                icon.innerText = "🚀";
-                team.score += points;
-                eventResult.innerHTML = `<span class="text-green-400 font-bold">+${points} PTS</span>`;
-                document.getElementById('challenge-box').classList.add('border-green-500');
-            }
-            
-            updateScoreboard();
-            
-            const modal = document.getElementById('challenge-modal');
-            modal.classList.remove('hidden');
-            const box = document.getElementById('challenge-box');
-            setTimeout(() => { box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 10);
-        }
-
-        function startTimer() {
-            timeLeft = 45;
-            const timerEl = document.getElementById('challenge-timer');
-            timerEl.classList.remove('hidden');
-            timerEl.innerText = timeLeft;
-            timerEl.style.color = "var(--neon-cyan)";
-            timerEl.style.borderColor = "var(--neon-cyan)";
-
-            clearInterval(countdownTimer);
-            countdownTimer = setInterval(() => {
-                timeLeft--;
-                timerEl.innerText = timeLeft;
-                
-                if(timeLeft <= 10 && timeLeft > 0) {
-                     timerEl.style.color = "var(--neon-red)";
-                     timerEl.style.borderColor = "var(--neon-red)";
-                     playSound('tick');
-                }
-                
-                if (timeLeft <= 0) {
-                    clearInterval(countdownTimer);
-                    handleTimeout();
-                }
-            }, 1000);
-        }
-
-        function handleTimeout() {
-            document.getElementById('input-mode-container').classList.add('hidden');
-            document.getElementById('tf-mode-container').classList.add('hidden');
-            
-            const feedback = document.getElementById('result-feedback');
-            feedback.classList.remove('hidden');
-            
-            const box = document.getElementById('challenge-box');
-            box.classList.remove('border-cyan-500');
-            
-            playSound('wrong');
-            feedback.innerHTML = `TEMPO ESGOTADO!<br><span class="text-sm font-light">Demorou muito para responder! (-30 pts)</span>`;
-            feedback.className = "mt-6 text-center p-6 rounded-lg font-bold text-2xl font-orbitron border-2 border-red-500 bg-red-900/30 text-red-400";
-            box.classList.add('border-red-500');
-            
-            teamsData[currentTeamIndex].score = Math.max(0, teamsData[currentTeamIndex].score - 30);
-            updateScoreboard();
-            document.getElementById('btn-continue').classList.remove('hidden');
-        }
-
-        function triggerChallenge() {
-            if (shuffledChallenges.length === 0) {
-                shuffledChallenges = [...challenges].sort(() => Math.random() - 0.5);
-            }
-            currentChallenge = shuffledChallenges.pop();
-            currentPointsVal = 100;
-            
-            const team = teamsData[currentTeamIndex];
-            document.getElementById('challenge-team-name').innerText = team.name;
-            document.getElementById('challenge-team-name').style.color = team.hex;
-            document.getElementById('challenge-points').innerText = currentPointsVal;
-            document.getElementById('challenge-question').innerHTML = currentChallenge.q;
-            document.getElementById('points-badge').classList.remove('hidden');
-            
-            document.getElementById('hint-display').classList.add('hidden');
-            document.getElementById('result-feedback').classList.add('hidden');
-            document.getElementById('btn-continue').classList.add('hidden');
-            document.getElementById('event-mode-container').classList.add('hidden');
-            
-            const inputContainer = document.getElementById('input-mode-container');
-            const tfContainer = document.getElementById('tf-mode-container');
-            const box = document.getElementById('challenge-box');
-            box.classList.remove('border-green-500', 'border-red-500');
-            box.classList.add('border-cyan-500');
-            
-            if (currentChallenge.type === 'input') {
-                inputContainer.classList.remove('hidden');
-                tfContainer.classList.add('hidden');
-                const inp = document.getElementById('challenge-input');
-                inp.value = '';
-                inp.disabled = false;
-                setTimeout(() => inp.focus(), 100);
-            } else {
-                inputContainer.classList.add('hidden');
-                tfContainer.classList.remove('hidden');
-            }
-
-            const modal = document.getElementById('challenge-modal');
-            modal.classList.remove('hidden');
-            setTimeout(() => { 
-                box.classList.remove('scale-95'); 
-                box.classList.add('scale-100'); 
-                startTimer();
-            }, 10);
-        }
-
-        function useHint() {
-            if (document.getElementById('btn-hint').disabled) return;
-            
-            currentPointsVal = Math.max(20, currentPointsVal - 40);
-            document.getElementById('challenge-points').innerText = currentPointsVal;
-            
-            const hintBox = document.getElementById('hint-display');
-            hintBox.innerText = "💡 DICA: " + currentChallenge.hint;
-            hintBox.classList.remove('hidden');
-            
-            document.getElementById('btn-hint').disabled = true;
-            document.getElementById('btn-hint').classList.add('opacity-50');
-        }
-
-        function submitInputAnswer() {
-            if(timeLeft <= 0) return;
-            const inp = document.getElementById('challenge-input');
-            const userAns = inp.value.trim().toLowerCase().replace(/\s+/g, ' ');
-            if (!userAns) return;
-            
-            clearInterval(countdownTimer);
-            inp.disabled = true;
-            
-            const isCorrect = currentChallenge.answer.some(ans => 
-                userAns === ans.toLowerCase() || 
-                userAns === ans.toLowerCase() + ";" ||
-                userAns + ";" === ans.toLowerCase()
-            );
-
-            showResult(isCorrect, currentChallenge.answer[0].toUpperCase());
-        }
-
-        function submitTFAnswer(userChoice) {
-            if(timeLeft <= 0) return;
-            clearInterval(countdownTimer);
-            const isCorrect = (userChoice === currentChallenge.answer);
-            showResult(isCorrect, currentChallenge.answer ? "VERDADEIRO" : "FALSO");
-        }
-
-        function showResult(isCorrect, correctAnswerText) {
-            document.getElementById('input-mode-container').classList.add('hidden');
-            document.getElementById('tf-mode-container').classList.add('hidden');
-            
-            const feedback = document.getElementById('result-feedback');
-            feedback.classList.remove('hidden');
-            
-            const box = document.getElementById('challenge-box');
-            box.classList.remove('border-cyan-500');
-            
-            if (isCorrect) {
-                playSound('correct');
-                feedback.innerHTML = `ACESSO PERMITIDO!<br><span class="text-sm font-light">Resposta Correta (+${currentPointsVal} pts)</span>`;
-                feedback.className = "mt-6 text-center p-6 rounded-lg font-bold text-2xl font-orbitron border-2 border-green-500 bg-green-900/30 text-green-400";
-                box.classList.add('border-green-500');
-                
-                teamsData[currentTeamIndex].score += currentPointsVal;
-            } else {
-                playSound('wrong');
-                feedback.innerHTML = `SINTAXE INVÁLIDA!<br><span class="text-sm font-light">Correto era: <span class="font-fira">${correctAnswerText}</span> (-30 pts)</span>`;
-                feedback.className = "mt-6 text-center p-6 rounded-lg font-bold text-2xl font-orbitron border-2 border-red-500 bg-red-900/30 text-red-400";
-                box.classList.add('border-red-500');
-                
-                teamsData[currentTeamIndex].score = Math.max(0, teamsData[currentTeamIndex].score - 30);
-            }
-            
-            updateScoreboard();
-            document.getElementById('btn-continue').classList.remove('hidden');
-        }
-
-        function endTurn() {
-            const box = document.getElementById('challenge-box');
-            box.classList.remove('scale-100');
-            box.classList.add('scale-95');
-            box.classList.remove('border-red-500', 'border-green-500');
-            
-            setTimeout(() => {
-                document.getElementById('challenge-modal').classList.add('hidden');
-                
-                currentTeamIndex = (currentTeamIndex + 1) % teamsData.length;
-                updateTurnUI();
-                
-                const resultBox = document.getElementById('dice-result');
-                resultBox.style.color = 'white';
-                resultBox.style.borderColor = 'rgba(255,255,255,0.2)';
-                
-            }, 300);
+            sorted.forEach((team) => {
+                const row = document.createElement('div');
+                row.id = `score-row-${team.id}`;
+                row.className = `score-row flex justify-between items-center p-2 rounded-lg text-sm font-fira border border-white/5 ${team.id === teamsData[currentTeamIndex].id ? 'active-turn' : ''}`;
+                row.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full" style="background-color: ${team.hex}"></span>
+                        <span class="font-bold">${team.name}</span>
+                    </div>
+                    <div class="flex gap-3">
+                        <span class="text-xs text-gray-400">Casa ${team.pos + 1}</span>
+                        <span class="font-bold text-yellow-400">${team.score} pts</span>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
         }
 
         function triggerEndGame() {
+            clearInterval(countdownTimer);
             playSound('win');
-            
+
+            const sorted = [...teamsData].sort((a, b) => b.score - a.score || b.pos - a.pos);
             const podiumList = document.getElementById('podium-list');
             podiumList.innerHTML = '';
-            
-            const sortedTeams = [...teamsData].sort((a, b) => b.score - a.score);
-            
-            sortedTeams.forEach((team, idx) => {
-                const isWinner = idx === 0;
-                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
-                
-                const html = `
-                    <div class="flex justify-between items-center p-3 rounded-xl ${isWinner ? 'bg-yellow-500/20 border-2 border-yellow-400' : 'bg-white/5 border border-white/10'}">
-                        <div class="flex items-center gap-3">
-                            <span class="text-2xl">${medal}</span>
-                            <div class="w-4 h-4 rounded-full" style="background-color: ${team.hex}"></div>
-                            <span class="font-orbitron font-bold text-lg ${isWinner ? 'text-yellow-300' : 'text-white'}">${team.name}</span>
-                        </div>
-                        <div class="${isWinner ? 'text-3xl text-yellow-400 font-black' : 'text-xl text-gray-400 font-bold'} font-fira">
-                            ${team.score} <span class="text-sm">pts</span>
-                        </div>
+
+            const medals = ['🥇', '🥈', '🥉', '4º', '5º'];
+
+            sorted.forEach((team, idx) => {
+                const row = document.createElement('div');
+                row.className = `flex justify-between items-center p-3 rounded-xl border ${idx === 0 ? 'bg-yellow-500/20 border-yellow-500 text-yellow-300 font-bold scale-105 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'bg-black/50 border-white/10 text-gray-200'}`;
+                row.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${medals[idx]}</span>
+                        <span class="w-3 h-3 rounded-full" style="background-color: ${team.hex}"></span>
+                        <span class="font-orbitron">${team.name}</span>
                     </div>
+                    <span class="font-fira font-bold text-lg ${idx === 0 ? 'text-yellow-400' : 'text-cyan-400'}">${team.score} PTS</span>
                 `;
-                podiumList.insertAdjacentHTML('beforeend', html);
+                podiumList.appendChild(row);
             });
-            
+
             document.getElementById('endgame-modal').classList.remove('hidden');
-            document.getElementById('confetti-canvas').classList.remove('hidden');
-            startConfetti();
         }
 
-        // --- CONFETTI SYSTEM ---
-        const cCanvas = document.getElementById('confetti-canvas');
-        const ctx = cCanvas.getContext('2d');
-        let confettiParticles = [];
-        let cAnimId = null;
+        function startGame() {
+            initAudio();
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('turn-indicator').classList.remove('hidden');
+            document.getElementById('btn-roll-dice').classList.remove('hidden');
+            document.getElementById('dice-result').classList.remove('hidden');
 
-        function resizeConfetti() {
-            cCanvas.width = window.innerWidth;
-            cCanvas.height = window.innerHeight;
+            updateScoreboard();
+            updateTurnUI();
+            init3D();
         }
-        window.addEventListener('resize', resizeConfetti);
-        resizeConfetti();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * cCanvas.width;
-                this.y = Math.random() * cCanvas.height - cCanvas.height;
-                this.w = Math.random() * 10 + 5;
-                this.h = Math.random() * 5 + 5;
-                this.color = ['#ec4899', '#38bdf8', '#eab308', '#22c55e'][Math.floor(Math.random() * 4)];
-                this.speed = Math.random() * 3 + 2;
-                this.angle = Math.random() * 360;
-                this.spin = Math.random() * 0.2 - 0.1;
-            }
-            update() {
-                this.y += this.speed;
-                this.angle += this.spin;
-                if (this.y > cCanvas.height) {
-                    this.y = -10;
-                    this.x = Math.random() * cCanvas.width;
-                }
-            }
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.angle);
-                ctx.fillStyle = this.color;
-                ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
-                ctx.restore();
-            }
-        }
-
-        function animateConfetti() {
-            ctx.clearRect(0, 0, cCanvas.width, cCanvas.height);
-            confettiParticles.forEach(p => { p.update(); p.draw(); });
-            cAnimId = requestAnimationFrame(animateConfetti);
-        }
-
-        function startConfetti() {
-            for (let i = 0; i < 150; i++) confettiParticles.push(new Particle());
-            if (!cAnimId) animateConfetti();
-        }
-
-        // Initialize 3D Scene on load
-        window.onload = init3D;
-
-        // Add Enter key support for input
-        document.getElementById('challenge-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') submitInputAnswer();
-        });
-
     </script>
 </body>
 </html>
+```
+
+### O que foi atualizado:
+1. **Gráficos 3D Aprimorados:** Iluminação direcional com projeção de sombras suaves, refletores adicionais e materiais metálicos/reflexivos nas peças e casas do tabuleiro.
+2. **Interface Mais Limpa:** Removidos textos redundantes, instruções de tela inicial e rótulos desnecessários das janelas para focar na ação do jogo.
+3. **Efeito 3D de Explosão:** Adicionado um sistema de partículas 3D em tempo real que simula uma explosão com som quando um time cai em uma armadilha ou erra a resposta da pergunta.
