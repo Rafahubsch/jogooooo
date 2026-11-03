@@ -29,9 +29,9 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Prevent scrolling, full 3D app */
+            overflow: hidden; /* Full screen 3D app */
             font-family: 'Rajdhani', sans-serif;
-            background-color: #05010a; /* Fallback */
+            background-color: #05010a;
             color: white;
         }
 
@@ -53,7 +53,7 @@
             width: 100%;
             height: 100%;
             z-index: 10;
-            pointer-events: none; /* Let clicks pass to 3D if needed */
+            pointer-events: none;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -69,10 +69,10 @@
 
         /* Glassmorphism */
         .glass-panel {
-            background: rgba(15, 5, 24, 0.6);
+            background: rgba(15, 5, 24, 0.65);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
         }
 
@@ -213,7 +213,7 @@
                     GAME SHOW
                 </h2>
                 <p class="text-lg md:text-xl text-pink-200 font-orbitron mb-2">DESAFIO POSTGRESQL</p>
-                <p class="text-sm text-gray-300 mb-8 max-w-md mx-auto">5 Equipes em uma disputa de alto nível sobre Migração, Exportação, Importação e Transações!</p>
+                <p class="text-sm text-gray-300 mb-8 max-w-md mx-auto">5 Equipes em uma disputa sobre Migração, Exportação, Importação e Transações!</p>
                 
                 <button onclick="startGame()" class="btn-neon btn-neon-pink px-10 py-5 text-2xl animate-glow shadow-[0_0_30px_rgba(236,72,153,0.8)]">
                     🚀 INICIAR GAME SHOW
@@ -324,7 +324,6 @@
             { id: 4, name: '👑 Mestres DB', color: 0xa855f7, hex: '#a855f7', score: 0, pos: 0 }
         ];
 
-        // Content carefully extracted from the provided text
         const challenges = [
             {
                 type: 'input',
@@ -403,18 +402,17 @@
         let shuffledChallenges = [...challenges].sort(() => Math.random() - 0.5);
 
         // --- GAME STATE ---
-        const BOARD_SIZE = 25; // number of tiles
+        const BOARD_SIZE = 25;
         let currentTeamIndex = 0;
         let isMoving = false;
         let currentChallenge = null;
         let currentPointsVal = 100;
-        let boardPath = []; // Array of Vector3 positions for tiles
+        let boardPath = [];
         let countdownTimer = null;
         let timeLeft = 45;
 
         // --- MAP GENERATION (OBSTACLES & BOOSTS) ---
         const tileData = new Array(BOARD_SIZE).fill('normal');
-        // Define Traps (Red) and Boosts (Green)
         tileData[4] = 'trap'; tileData[10] = 'trap'; tileData[16] = 'trap'; tileData[21] = 'trap';
         tileData[7] = 'boost'; tileData[14] = 'boost'; tileData[19] = 'boost';
 
@@ -484,25 +482,22 @@
         // --- THREE.JS SETUP ---
         let scene, camera, renderer;
         let pieceMeshes = [];
-        let galaxy; // Referência para a galáxia 3D
+        let galaxy;
 
         function init3D() {
             const canvas = document.getElementById('game-canvas');
             scene = new THREE.Scene();
             scene.fog = new THREE.FogExp2(0x0a0118, 0.012);
 
-            // Dynamic camera positioning for ultra immersive 3D view
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.set(0, 32, 42);
             camera.lookAt(0, 0, 2);
 
-            // Renderer
             renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
 
-            // Lights
             const ambient = new THREE.AmbientLight(0xffffff, 0.35);
             scene.add(ambient);
             
@@ -527,7 +522,6 @@
         }
 
         function buildBoard() {
-            // Generate 3D Elevated Tiles
             const tileGeo = new THREE.BoxGeometry(3.2, 0.8, 3.2);
             
             let cx = -15, cz = -15;
@@ -553,9 +547,8 @@
                 
                 const tile = new THREE.Mesh(tileGeo, mat);
                 tile.position.copy(boardPath[i]);
-                tile.position.y = Math.sin(i * 0.3) * 0.2; // Slight 3D elevation wave
+                tile.position.y = Math.sin(i * 0.3) * 0.2;
                 
-                // Add 3D Glowing Rim for tile
                 const rimGeo = new THREE.BoxGeometry(3.4, 0.2, 3.4);
                 const rimMat = new THREE.MeshStandardMaterial({ 
                     color: color, 
@@ -584,9 +577,6 @@
         }
 
         function buildPieces() {
-            // Enhanced 3D Pawn Geometry
-            const groupGeo = new THREE.Group();
-            
             const baseGeo = new THREE.CylinderGeometry(0.9, 1.1, 0.4, 16);
             const bodyGeo = new THREE.ConeGeometry(0.7, 2.0, 16);
             const headGeo = new THREE.SphereGeometry(0.5, 16, 16);
@@ -622,7 +612,6 @@
         }
 
         function getPieceOffset(index) {
-            // Circle arrangement
             const angle = (index / 5) * Math.PI * 2;
             const radius = 0.8;
             return new THREE.Vector3(Math.cos(angle) * radius, 0.3, Math.sin(angle) * radius);
@@ -639,20 +628,18 @@
             const colorLightPink = new THREE.Color(0xfbcfe8);
             
             for(let i = 0; i < particleCount; i++) {
-                // Lógica para criar braços em espiral
-                const r = Math.random() * 90; // Raio da galáxia
-                const branch = i % 4; // 4 braços em espiral
+                const r = Math.random() * 90;
+                const branch = i % 4;
                 const theta = (branch * ((Math.PI * 2) / 4)) + (r * 0.05) + (Math.random() * 0.8 - 0.4);
                 
                 const x = Math.cos(theta) * r;
-                const y = (Math.random() - 0.5) * 12 * (1 - r/100); // Mais achatado nas bordas
+                const y = (Math.random() - 0.5) * 12 * (1 - r/100);
                 const z = Math.sin(theta) * r;
                 
                 pos[i*3] = x;
-                pos[i*3+1] = y - 10; // Abaixar um pouco a galáxia
+                pos[i*3+1] = y - 10;
                 pos[i*3+2] = z - 20;
 
-                // Mistura as cores rosa, roxo e rosa claro
                 const mixedColor = colorPink.clone().lerp(Math.random() > 0.5 ? colorPurple : colorLightPink, Math.random());
                 colors[i*3] = mixedColor.r;
                 colors[i*3+1] = mixedColor.g;
@@ -671,7 +658,7 @@
             });
             
             galaxy = new THREE.Points(geo, mat);
-            galaxy.rotation.x = Math.PI / 8; // Inclina a galáxia para visualização 3D melhor
+            galaxy.rotation.x = Math.PI / 8;
             scene.add(galaxy);
         }
 
@@ -684,19 +671,16 @@
         function animate3D() {
             requestAnimationFrame(animate3D);
             
-            // Continuous subtle camera oscillation for deep 3D perspective
             const time = Date.now() * 0.0005;
             camera.position.x = Math.sin(time) * 4;
             camera.position.z = 42 + Math.cos(time * 0.8) * 3;
             camera.lookAt(0, 0, 2);
 
-            // Rotação suave da Galáxia Espiral
             if (galaxy) {
                 galaxy.rotation.y += 0.0015;
                 galaxy.rotation.z = Math.sin(time * 0.5) * 0.05;
             }
             
-            // Hover animation for active 3D piece
             if (!isMoving) {
                 pieceMeshes.forEach((mesh, idx) => {
                     const offset = getPieceOffset(idx);
@@ -723,7 +707,6 @@
             const list = document.getElementById('scoreboard-list');
             list.innerHTML = '';
             
-            // Sort by score, then by pos
             const sortedTeams = [...teamsData].sort((a, b) => {
                 if (b.score === a.score) return b.pos - a.pos;
                 return b.score - a.score;
@@ -788,7 +771,7 @@
                 
                 if (rolls >= maxRolls) {
                     clearInterval(rollInterval);
-                    const finalRoll = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
+                    const finalRoll = Math.floor(Math.random() * 3) + 1;
                     resultBox.innerText = finalRoll;
                     resultBox.style.color = 'var(--neon-yellow)';
                     resultBox.style.borderColor = 'var(--neon-yellow)';
@@ -812,8 +795,7 @@
                     const offset = getPieceOffset(currentTeamIndex);
                     const target = boardPath[team.pos].clone().add(offset);
                     
-                    // Simple animation (jump)
-                    const dur = 400; // ms
+                    const dur = 400;
                     const startT = Date.now();
                     const startPos = mesh.position.clone();
                     
@@ -821,7 +803,6 @@
                         const t = (Date.now() - startT) / dur;
                         if (t < 1) {
                             mesh.position.lerpVectors(startPos, target, t);
-                            // Arch parabola
                             mesh.position.y += Math.sin(t * Math.PI) * 2;
                             requestAnimationFrame(animFrame);
                         } else {
@@ -836,11 +817,9 @@
                     updateScoreboard();
                     
                     if (team.pos >= BOARD_SIZE - 1) {
-                        // Reached the end! Extra points and check win
                         team.score += 500;
                         setTimeout(triggerEndGame, 1000);
                     } else {
-                        // Check if landed on special tile
                         const currentTileType = tileData[team.pos];
                         if (currentTileType === 'trap') {
                             setTimeout(() => triggerEventModal('trap', 'FALHA DE ENERGIA!', 'O servidor reiniciou inesperadamente. O ROLLBACK foi acionado.', -50), 500);
@@ -855,7 +834,6 @@
             stepAnimation();
         }
 
-        // --- EVENT TILE MODAL ---
         function triggerEventModal(type, title, desc, points) {
             const team = teamsData[currentTeamIndex];
             document.getElementById('challenge-team-name').innerText = team.name;
@@ -880,7 +858,7 @@
             if (type === 'trap') {
                 playSound('wrong');
                 icon.innerText = "💥";
-                team.score = Math.max(0, team.score + points); // points is negative here (-50)
+                team.score = Math.max(0, team.score + points);
                 eventResult.innerHTML = `<span class="text-red-400 font-bold">${points} PTS</span>`;
                 document.getElementById('challenge-box').classList.add('border-red-500');
             } else {
@@ -899,7 +877,6 @@
             setTimeout(() => { box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 10);
         }
 
-        // --- TIMER LOGIC ---
         function startTimer() {
             timeLeft = 45;
             const timerEl = document.getElementById('challenge-timer');
@@ -947,7 +924,6 @@
         }
 
         function triggerChallenge() {
-            // Get a question, recycle if empty
             if (shuffledChallenges.length === 0) {
                 shuffledChallenges = [...challenges].sort(() => Math.random() - 0.5);
             }
@@ -958,10 +934,9 @@
             document.getElementById('challenge-team-name').innerText = team.name;
             document.getElementById('challenge-team-name').style.color = team.hex;
             document.getElementById('challenge-points').innerText = currentPointsVal;
-            document.getElementById('challenge-question').innerHTML = currentChallenge.q; // Changed to innerHTML to allow tags if needed
+            document.getElementById('challenge-question').innerHTML = currentChallenge.q;
             document.getElementById('points-badge').classList.remove('hidden');
             
-            // Reset UI
             document.getElementById('hint-display').classList.add('hidden');
             document.getElementById('result-feedback').classList.add('hidden');
             document.getElementById('btn-continue').classList.add('hidden');
@@ -985,14 +960,12 @@
                 tfContainer.classList.remove('hidden');
             }
 
-            // Show Modal
             const modal = document.getElementById('challenge-modal');
             modal.classList.remove('hidden');
-            // Pop effect
             setTimeout(() => { 
                 box.classList.remove('scale-95'); 
                 box.classList.add('scale-100'); 
-                startTimer(); // INICIA O TEMPO ASSIM QUE ABRIR
+                startTimer();
             }, 10);
         }
 
@@ -1011,16 +984,14 @@
         }
 
         function submitInputAnswer() {
-            if(timeLeft <= 0) return; // Prevent answer after timeout
+            if(timeLeft <= 0) return;
             const inp = document.getElementById('challenge-input');
-            const userAns = inp.value.trim().toLowerCase().replace(/\s+/g, ' '); // normalize spaces
+            const userAns = inp.value.trim().toLowerCase().replace(/\s+/g, ' ');
             if (!userAns) return;
             
-            clearInterval(countdownTimer); // STOP TIMER
+            clearInterval(countdownTimer);
             inp.disabled = true;
             
-            // Check against array of valid answers
-            // Convert to lowercase and trim for comparison
             const isCorrect = currentChallenge.answer.some(ans => 
                 userAns === ans.toLowerCase() || 
                 userAns === ans.toLowerCase() + ";" ||
@@ -1031,8 +1002,8 @@
         }
 
         function submitTFAnswer(userChoice) {
-            if(timeLeft <= 0) return; // Prevent answer after timeout
-            clearInterval(countdownTimer); // STOP TIMER
+            if(timeLeft <= 0) return;
+            clearInterval(countdownTimer);
             const isCorrect = (userChoice === currentChallenge.answer);
             showResult(isCorrect, currentChallenge.answer ? "VERDADEIRO" : "FALSO");
         }
@@ -1071,16 +1042,14 @@
             const box = document.getElementById('challenge-box');
             box.classList.remove('scale-100');
             box.classList.add('scale-95');
-            box.classList.remove('border-red-500', 'border-green-500'); // clean event borders
+            box.classList.remove('border-red-500', 'border-green-500');
             
             setTimeout(() => {
                 document.getElementById('challenge-modal').classList.add('hidden');
                 
-                // Next team
                 currentTeamIndex = (currentTeamIndex + 1) % teamsData.length;
                 updateTurnUI();
                 
-                // Reset Dice visual
                 const resultBox = document.getElementById('dice-result');
                 resultBox.style.color = 'white';
                 resultBox.style.borderColor = 'rgba(255,255,255,0.2)';
@@ -1091,11 +1060,10 @@
         function triggerEndGame() {
             playSound('win');
             
-            // Sort teams by score
             const sortedTeams = [...teamsData].sort((a, b) => b.score - a.score);
 
             const podiumList = document.getElementById('podium-list');
-            podiumList.innerHTML = ''; // Limpar lista
+            podiumList.innerHTML = '';
             
             const medals = ['🥇', '🥈', '🥉', '4º', '5º'];
             
@@ -1116,7 +1084,6 @@
             });
             
             document.getElementById('endgame-modal').classList.remove('hidden');
-            
             document.getElementById('confetti-canvas').classList.remove('hidden');
             startConfetti();
         }
