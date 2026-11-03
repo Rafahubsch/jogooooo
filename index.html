@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PostgreSQL 3D Game Show - Loja Primavera</title>
+    <title>PostgreSQL Game Show</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -207,37 +207,49 @@
         </div>
 
         <!-- CENTER START SCREEN (Overlay) -->
-        <div id="start-screen" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/40 backdrop-blur-sm z-50">
+        <div id="start-screen" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/70 backdrop-blur-md z-50">
             <div class="glass-panel p-8 md:p-12 rounded-3xl text-center max-w-2xl border border-pink-500 shadow-[0_0_50px_rgba(236,72,153,0.4)]">
-                <h2 class="text-5xl md:text-7xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-pink-600 mb-6 drop-shadow-[0_0_20px_rgba(236,72,153,0.9)]">
+                <h2 class="text-5xl md:text-7xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-pink-600 mb-4 drop-shadow-[0_0_20px_rgba(236,72,153,0.9)]">
                     GAME SHOW
                 </h2>
-                <p class="text-lg text-pink-100 mb-8 font-light tracking-wide">
-                    O tabuleiro holográfico está pronto. Responda aos desafios técnicos e mostre quem domina o banco de dados!
-                </p>
-                <button onclick="startGame()" class="btn-neon btn-neon-pink text-xl px-12 py-4 animate-glow text-pink-400 font-black tracking-widest">
-                    INICIAR SIMULAÇÃO
+                <p class="text-lg md:text-xl text-pink-200 font-orbitron mb-2">DESAFIO POSTGRESQL</p>
+                <p class="text-sm text-gray-300 mb-8 max-w-md mx-auto">5 Equipes em uma disputa de alto nível sobre Migração, Exportação, Importação e Transações!</p>
+                
+                <button onclick="startGame()" class="btn-neon btn-neon-pink px-10 py-5 text-2xl animate-glow shadow-[0_0_30px_rgba(236,72,153,0.8)]">
+                    🚀 INICIAR GAME SHOW
                 </button>
             </div>
         </div>
 
-        <!-- CENTER CHALLENGE MODAL (Hidden by default) -->
-        <div id="challenge-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/70 backdrop-blur-md z-40 hidden">
-            <div class="glass-panel p-8 rounded-2xl max-w-3xl w-full mx-4 border-2 border-cyan-500 shadow-[0_0_30px_rgba(56,189,248,0.3)] transform transition-transform scale-95" id="challenge-box">
-                
-                <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+        <!-- CHALLENGE MODAL -->
+        <div id="challenge-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/60 backdrop-blur-sm z-40 hidden">
+            <div id="challenge-box" class="glass-panel p-8 md:p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-cyan-500 shadow-[0_0_40px_rgba(56,189,248,0.3)] transition-all duration-300 scale-95">
+                <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4 relative">
                     <span class="text-cyan-400 font-orbitron font-bold text-lg" id="challenge-team-name">Equipe X</span>
-                    <span class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded text-sm font-fira border border-yellow-500/50">Valendo: <span id="challenge-points">100</span> pts</span>
+                    
+                    <!-- Timer UI -->
+                    <div id="challenge-timer" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-black/80 rounded-full border-2 border-cyan-500 flex items-center justify-center text-xl font-bold font-orbitron text-cyan-400 shadow-[0_0_10px_rgba(56,189,248,0.5)] transition-colors duration-300 hidden">
+                        45
+                    </div>
+
+                    <span class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded text-sm font-fira border border-yellow-500/50" id="points-badge">Valendo: <span id="challenge-points">100</span> pts</span>
                 </div>
 
                 <h3 class="text-xl md:text-3xl font-semibold mb-8 leading-relaxed" id="challenge-question">
                     Carregando desafio...
                 </h3>
 
+                <!-- Event Mode (Obstacles / Boosts) -->
+                <div id="event-mode-container" class="hidden space-y-4 text-center">
+                    <div class="text-6xl mb-4" id="event-icon">⚠️</div>
+                    <div id="event-result-text" class="text-3xl font-orbitron mb-6"></div>
+                    <button onclick="endTurn()" class="btn-neon btn-neon-pink px-8 py-3">CONTINUAR ➔</button>
+                </div>
+
                 <!-- Input mode -->
                 <div id="input-mode-container" class="hidden space-y-4">
                     <p class="text-sm text-gray-400 font-fira mb-2">Digite o comando ou palavra-chave exata:</p>
-                    <input type="text" id="challenge-input" class="terminal-input" placeholder="ex: COMMIT;" autocomplete="off" spellcheck="false">
+                    <input type="text" id="challenge-input" class="terminal-input" placeholder="ex: COMMIT" autocomplete="off" spellcheck="false">
                     <div class="flex justify-end gap-4 mt-6">
                         <button onclick="useHint()" id="btn-hint" class="btn-neon text-yellow-400 border-yellow-500/50 hover:bg-yellow-500/20 text-sm">💡 Dica (-40pts)</button>
                         <button onclick="submitInputAnswer()" class="btn-neon btn-neon-cyan">EXECUTAR</button>
@@ -252,7 +264,7 @@
                     </div>
                 </div>
 
-                <!-- Hint Text -->
+                <!-- Hint Display -->
                 <div id="hint-display" class="hidden mt-6 p-4 bg-yellow-900/30 border border-yellow-500/50 rounded-lg text-yellow-200 text-sm font-fira">
                 </div>
 
@@ -269,21 +281,18 @@
 
         <!-- ENDGAME MODAL (Hidden by default) -->
         <div id="endgame-modal" class="absolute inset-0 flex items-center justify-center interactive-ui bg-black/80 backdrop-blur-lg z-50 hidden">
-            <div class="glass-panel p-10 rounded-3xl text-center max-w-2xl border-2 border-yellow-500 shadow-[0_0_50px_rgba(234,179,8,0.5)]">
+            <div class="glass-panel p-10 rounded-3xl text-center max-w-2xl w-full border-2 border-yellow-500 shadow-[0_0_50px_rgba(234,179,8,0.5)]">
                 <h2 class="text-5xl font-orbitron font-bold text-yellow-400 mb-2 drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]">FIM DA SIMULAÇÃO</h2>
                 <p class="text-xl text-gray-300 mb-8">Todas as transações foram processadas.</p>
                 
-                <h3 class="text-3xl font-bold text-white mb-6">Equipe Campeã:</h3>
-                <div id="winner-name" class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 font-orbitron mb-8 py-2">
-                    NOME DA EQUIPE
+                <h3 class="text-2xl font-bold text-white mb-6">CLASSIFICAÇÃO FINAL:</h3>
+                
+                <!-- Podium List -->
+                <div id="podium-list" class="flex flex-col gap-3 mb-8 w-full max-w-md mx-auto text-left">
+                    <!-- Injected by JS -->
                 </div>
 
-                <div class="bg-black/50 p-6 rounded-xl border border-white/20 mb-8">
-                    <p class="text-gray-400 font-orbitron mb-2">Pontuação Final</p>
-                    <p id="winner-score" class="text-5xl font-bold text-yellow-400">0</p>
-                </div>
-
-                <button onclick="location.reload()" class="btn-neon btn-neon-cyan">JOGAR NOVAMENTE</button>
+                <button onclick="location.reload()" class="btn-neon btn-neon-cyan mt-4">JOGAR NOVAMENTE</button>
             </div>
         </div>
 
@@ -400,6 +409,14 @@
         let currentChallenge = null;
         let currentPointsVal = 100;
         let boardPath = []; // Array of Vector3 positions for tiles
+        let countdownTimer = null;
+        let timeLeft = 45;
+
+        // --- MAP GENERATION (OBSTACLES & BOOSTS) ---
+        const tileData = new Array(BOARD_SIZE).fill('normal');
+        // Define Traps (Red) and Boosts (Green)
+        tileData[4] = 'trap'; tileData[10] = 'trap'; tileData[16] = 'trap'; tileData[21] = 'trap';
+        tileData[7] = 'boost'; tileData[14] = 'boost'; tileData[19] = 'boost';
 
         // --- WEB AUDIO API ---
         let audioCtx;
@@ -455,6 +472,12 @@
                     g.gain.exponentialRampToValueAtTime(0.01, now + i*0.1 + 0.5);
                     o.start(now + i*0.1); o.stop(now + i*0.1 + 0.5);
                 });
+            } else if (type === 'tick') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, now);
+                gain.gain.setValueAtTime(0.02, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
             }
         }
 
@@ -466,39 +489,46 @@
         function init3D() {
             const canvas = document.getElementById('game-canvas');
             scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x10001a, 0.015); // Tom mais puxado pro roxo/rosa escuro
+            scene.fog = new THREE.FogExp2(0x0a0118, 0.012);
 
-            // Camera (Isometric-ish perspective)
+            // Dynamic camera positioning for ultra immersive 3D view
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 30, 40);
-            camera.lookAt(0, 0, 0);
+            camera.position.set(0, 32, 42);
+            camera.lookAt(0, 0, 2);
 
             // Renderer
             renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
 
             // Lights
-            const ambient = new THREE.AmbientLight(0xffffff, 0.2);
+            const ambient = new THREE.AmbientLight(0xffffff, 0.35);
             scene.add(ambient);
-            const pLight1 = new THREE.PointLight(0xec4899, 1, 100);
-            pLight1.position.set(-10, 20, 10);
+            
+            const pLight1 = new THREE.PointLight(0xec4899, 2.5, 120);
+            pLight1.position.set(-15, 25, 15);
             scene.add(pLight1);
-            const pLight2 = new THREE.PointLight(0x38bdf8, 1, 100);
-            pLight2.position.set(10, 20, -10);
+            
+            const pLight2 = new THREE.PointLight(0x38bdf8, 2.5, 120);
+            pLight2.position.set(15, 25, -15);
             scene.add(pLight2);
+
+            const pLightCenter = new THREE.PointLight(0xa855f7, 2, 80);
+            pLightCenter.position.set(0, 10, 0);
+            scene.add(pLightCenter);
 
             buildBoard();
             buildPieces();
-            createGalaxy(); // Substituindo estrelas por galáxia
+            createGalaxy();
 
             window.addEventListener('resize', onWindowResize, false);
             animate3D();
         }
 
         function buildBoard() {
-            // Generate an S-curve path
-            const tileGeo = new THREE.BoxGeometry(3, 0.5, 3);
+            // Generate 3D Elevated Tiles
+            const tileGeo = new THREE.BoxGeometry(3.2, 0.8, 3.2);
             
             let cx = -15, cz = -15;
             let dirX = 1;
@@ -506,33 +536,39 @@
             for (let i = 0; i < BOARD_SIZE; i++) {
                 boardPath.push(new THREE.Vector3(cx, 0, cz));
                 
-                // Determine color (Start, End, Default)
-                let color = 0x1e3a8a; // Dark blue
-                let emissive = 0x000000;
-                if (i === 0) { color = 0x22c55e; emissive = 0x116633; } // Start green
-                else if (i === BOARD_SIZE - 1) { color = 0xeab308; emissive = 0x886600; } // End gold
-                else if (i % 2 === 0) { color = 0x4a044e; emissive = 0x220022; } // Alt purple
+                let color = 0x1e3a8a;
+                let emissive = 0x0a192f;
+                if (i === 0) { color = 0x22c55e; emissive = 0x116633; }
+                else if (i === BOARD_SIZE - 1) { color = 0xeab308; emissive = 0x886600; }
+                else if (tileData[i] === 'trap') { color = 0xef4444; emissive = 0x880000; }
+                else if (tileData[i] === 'boost') { color = 0x22c55e; emissive = 0x008800; }
+                else if (i % 2 === 0) { color = 0x4a044e; emissive = 0x220022; }
 
                 const mat = new THREE.MeshStandardMaterial({ 
                     color: color, 
                     emissive: emissive,
-                    roughness: 0.2,
-                    metalness: 0.8
+                    roughness: 0.15,
+                    metalness: 0.85
                 });
                 
                 const tile = new THREE.Mesh(tileGeo, mat);
                 tile.position.copy(boardPath[i]);
+                tile.position.y = Math.sin(i * 0.3) * 0.2; // Slight 3D elevation wave
                 
-                // Add number label (simple visual representation via smaller box for now, keeping it lightweight)
-                const innerGeo = new THREE.BoxGeometry(2, 0.6, 2);
-                const innerMat = new THREE.MeshStandardMaterial({ color: 0x000000 });
-                const innerTile = new THREE.Mesh(innerGeo, innerMat);
-                innerTile.position.copy(boardPath[i]);
+                // Add 3D Glowing Rim for tile
+                const rimGeo = new THREE.BoxGeometry(3.4, 0.2, 3.4);
+                const rimMat = new THREE.MeshStandardMaterial({ 
+                    color: color, 
+                    emissive: color, 
+                    emissiveIntensity: 0.8 
+                });
+                const rimTile = new THREE.Mesh(rimGeo, rimMat);
+                rimTile.position.copy(tile.position);
+                rimTile.position.y -= 0.35;
                 
                 scene.add(tile);
-                scene.add(innerTile);
+                scene.add(rimTile);
 
-                // Path logic
                 if (dirX === 1) {
                     cx += 4;
                     if (cx > 15) { dirX = 0; cz += 4; }
@@ -548,25 +584,40 @@
         }
 
         function buildPieces() {
-            const pieceGeo = new THREE.ConeGeometry(0.8, 2.5, 16);
-            pieceGeo.translate(0, 1.25, 0); // pivot at bottom
+            // Enhanced 3D Pawn Geometry
+            const groupGeo = new THREE.Group();
+            
+            const baseGeo = new THREE.CylinderGeometry(0.9, 1.1, 0.4, 16);
+            const bodyGeo = new THREE.ConeGeometry(0.7, 2.0, 16);
+            const headGeo = new THREE.SphereGeometry(0.5, 16, 16);
+            
+            bodyGeo.translate(0, 1.2, 0);
+            headGeo.translate(0, 2.3, 0);
 
             teamsData.forEach((team, idx) => {
                 const mat = new THREE.MeshStandardMaterial({ 
                     color: team.color,
                     emissive: team.color,
-                    emissiveIntensity: 0.5,
-                    roughness: 0.2
+                    emissiveIntensity: 0.6,
+                    roughness: 0.1,
+                    metalness: 0.9
                 });
-                const mesh = new THREE.Mesh(pieceGeo, mat);
+
+                const pawn = new THREE.Group();
+                const baseMesh = new THREE.Mesh(baseGeo, mat);
+                const bodyMesh = new THREE.Mesh(bodyGeo, mat);
+                const headMesh = new THREE.Mesh(headGeo, mat);
                 
-                // Position pieces slightly offset so they don't overlap completely
+                pawn.add(baseMesh);
+                pawn.add(bodyMesh);
+                pawn.add(headMesh);
+                
                 const offset = getPieceOffset(idx);
                 const startPos = boardPath[0].clone().add(offset);
-                mesh.position.copy(startPos);
+                pawn.position.copy(startPos);
                 
-                scene.add(mesh);
-                pieceMeshes.push(mesh);
+                scene.add(pawn);
+                pieceMeshes.push(pawn);
             });
         }
 
@@ -633,20 +684,27 @@
         function animate3D() {
             requestAnimationFrame(animate3D);
             
+            // Continuous subtle camera oscillation for deep 3D perspective
+            const time = Date.now() * 0.0005;
+            camera.position.x = Math.sin(time) * 4;
+            camera.position.z = 42 + Math.cos(time * 0.8) * 3;
+            camera.lookAt(0, 0, 2);
+
             // Rotação suave da Galáxia Espiral
             if (galaxy) {
                 galaxy.rotation.y += 0.0015;
+                galaxy.rotation.z = Math.sin(time * 0.5) * 0.05;
             }
             
-            // Make active player's piece hover/spin
+            // Hover animation for active 3D piece
             if (!isMoving) {
                 pieceMeshes.forEach((mesh, idx) => {
                     const offset = getPieceOffset(idx);
                     const targetPos = boardPath[teamsData[idx].pos].clone().add(offset);
                     
                     if (idx === currentTeamIndex) {
-                        mesh.rotation.y += 0.05;
-                        mesh.position.y = targetPos.y + 0.5 + Math.sin(Date.now() * 0.005) * 0.3;
+                        mesh.rotation.y += 0.04;
+                        mesh.position.y = targetPos.y + 0.6 + Math.sin(Date.now() * 0.006) * 0.4;
                     } else {
                         mesh.rotation.y = 0;
                         mesh.position.y = targetPos.y;
@@ -782,11 +840,110 @@
                         team.score += 500;
                         setTimeout(triggerEndGame, 1000);
                     } else {
-                        setTimeout(triggerChallenge, 500);
+                        // Check if landed on special tile
+                        const currentTileType = tileData[team.pos];
+                        if (currentTileType === 'trap') {
+                            setTimeout(() => triggerEventModal('trap', 'FALHA DE ENERGIA!', 'O servidor reiniciou inesperadamente. O ROLLBACK foi acionado.', -50), 500);
+                        } else if (currentTileType === 'boost') {
+                            setTimeout(() => triggerEventModal('boost', 'BACKUP CONCLUÍDO!', 'O pg_dump salvou o dia antes do prazo.', 50), 500);
+                        } else {
+                            setTimeout(triggerChallenge, 500);
+                        }
                     }
                 }
             }
             stepAnimation();
+        }
+
+        // --- EVENT TILE MODAL ---
+        function triggerEventModal(type, title, desc, points) {
+            const team = teamsData[currentTeamIndex];
+            document.getElementById('challenge-team-name').innerText = team.name;
+            document.getElementById('challenge-team-name').style.color = team.hex;
+            
+            document.getElementById('points-badge').classList.add('hidden');
+            document.getElementById('challenge-timer').classList.add('hidden');
+            
+            document.getElementById('challenge-question').innerHTML = `<span class="${type === 'trap' ? 'text-red-500' : 'text-green-500'} font-bold">${title}</span><br><span class="text-lg font-light text-gray-300 mt-2 block">${desc}</span>`;
+            
+            document.getElementById('input-mode-container').classList.add('hidden');
+            document.getElementById('tf-mode-container').classList.add('hidden');
+            document.getElementById('result-feedback').classList.add('hidden');
+            document.getElementById('btn-continue').classList.add('hidden');
+            
+            const eventContainer = document.getElementById('event-mode-container');
+            eventContainer.classList.remove('hidden');
+            
+            const eventResult = document.getElementById('event-result-text');
+            const icon = document.getElementById('event-icon');
+            
+            if (type === 'trap') {
+                playSound('wrong');
+                icon.innerText = "💥";
+                team.score = Math.max(0, team.score + points); // points is negative here (-50)
+                eventResult.innerHTML = `<span class="text-red-400 font-bold">${points} PTS</span>`;
+                document.getElementById('challenge-box').classList.add('border-red-500');
+            } else {
+                playSound('correct');
+                icon.innerText = "🚀";
+                team.score += points;
+                eventResult.innerHTML = `<span class="text-green-400 font-bold">+${points} PTS</span>`;
+                document.getElementById('challenge-box').classList.add('border-green-500');
+            }
+            
+            updateScoreboard();
+            
+            const modal = document.getElementById('challenge-modal');
+            modal.classList.remove('hidden');
+            const box = document.getElementById('challenge-box');
+            setTimeout(() => { box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 10);
+        }
+
+        // --- TIMER LOGIC ---
+        function startTimer() {
+            timeLeft = 45;
+            const timerEl = document.getElementById('challenge-timer');
+            timerEl.classList.remove('hidden');
+            timerEl.innerText = timeLeft;
+            timerEl.style.color = "var(--neon-cyan)";
+            timerEl.style.borderColor = "var(--neon-cyan)";
+
+            clearInterval(countdownTimer);
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+                
+                if(timeLeft <= 10 && timeLeft > 0) {
+                     timerEl.style.color = "var(--neon-red)";
+                     timerEl.style.borderColor = "var(--neon-red)";
+                     playSound('tick');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function handleTimeout() {
+            document.getElementById('input-mode-container').classList.add('hidden');
+            document.getElementById('tf-mode-container').classList.add('hidden');
+            
+            const feedback = document.getElementById('result-feedback');
+            feedback.classList.remove('hidden');
+            
+            const box = document.getElementById('challenge-box');
+            box.classList.remove('border-cyan-500');
+            
+            playSound('wrong');
+            feedback.innerHTML = `TEMPO ESGOTADO!<br><span class="text-sm font-light">Demorou muito para responder! (-30 pts)</span>`;
+            feedback.className = "mt-6 text-center p-6 rounded-lg font-bold text-2xl font-orbitron border-2 border-red-500 bg-red-900/30 text-red-400";
+            box.classList.add('border-red-500');
+            
+            teamsData[currentTeamIndex].score = Math.max(0, teamsData[currentTeamIndex].score - 30);
+            updateScoreboard();
+            document.getElementById('btn-continue').classList.remove('hidden');
         }
 
         function triggerChallenge() {
@@ -801,14 +958,14 @@
             document.getElementById('challenge-team-name').innerText = team.name;
             document.getElementById('challenge-team-name').style.color = team.hex;
             document.getElementById('challenge-points').innerText = currentPointsVal;
-            document.getElementById('challenge-question').innerText = currentChallenge.q;
+            document.getElementById('challenge-question').innerHTML = currentChallenge.q; // Changed to innerHTML to allow tags if needed
+            document.getElementById('points-badge').classList.remove('hidden');
             
             // Reset UI
             document.getElementById('hint-display').classList.add('hidden');
             document.getElementById('result-feedback').classList.add('hidden');
             document.getElementById('btn-continue').classList.add('hidden');
-            document.getElementById('btn-hint').disabled = false;
-            document.getElementById('btn-hint').classList.remove('opacity-50');
+            document.getElementById('event-mode-container').classList.add('hidden');
             
             const inputContainer = document.getElementById('input-mode-container');
             const tfContainer = document.getElementById('tf-mode-container');
@@ -832,7 +989,11 @@
             const modal = document.getElementById('challenge-modal');
             modal.classList.remove('hidden');
             // Pop effect
-            setTimeout(() => { box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 10);
+            setTimeout(() => { 
+                box.classList.remove('scale-95'); 
+                box.classList.add('scale-100'); 
+                startTimer(); // INICIA O TEMPO ASSIM QUE ABRIR
+            }, 10);
         }
 
         function useHint() {
@@ -850,10 +1011,12 @@
         }
 
         function submitInputAnswer() {
+            if(timeLeft <= 0) return; // Prevent answer after timeout
             const inp = document.getElementById('challenge-input');
             const userAns = inp.value.trim().toLowerCase().replace(/\s+/g, ' '); // normalize spaces
             if (!userAns) return;
             
+            clearInterval(countdownTimer); // STOP TIMER
             inp.disabled = true;
             
             // Check against array of valid answers
@@ -868,6 +1031,8 @@
         }
 
         function submitTFAnswer(userChoice) {
+            if(timeLeft <= 0) return; // Prevent answer after timeout
+            clearInterval(countdownTimer); // STOP TIMER
             const isCorrect = (userChoice === currentChallenge.answer);
             showResult(isCorrect, currentChallenge.answer ? "VERDADEIRO" : "FALSO");
         }
@@ -906,6 +1071,7 @@
             const box = document.getElementById('challenge-box');
             box.classList.remove('scale-100');
             box.classList.add('scale-95');
+            box.classList.remove('border-red-500', 'border-green-500'); // clean event borders
             
             setTimeout(() => {
                 document.getElementById('challenge-modal').classList.add('hidden');
@@ -925,14 +1091,29 @@
         function triggerEndGame() {
             playSound('win');
             
-            // Find highest score
-            let winner = teamsData[0];
-            teamsData.forEach(t => {
-                if (t.score > winner.score) winner = t;
-            });
+            // Sort teams by score
+            const sortedTeams = [...teamsData].sort((a, b) => b.score - a.score);
 
-            document.getElementById('winner-name').innerText = winner.name;
-            document.getElementById('winner-score').innerText = winner.score;
+            const podiumList = document.getElementById('podium-list');
+            podiumList.innerHTML = ''; // Limpar lista
+            
+            const medals = ['🥇', '🥈', '🥉', '4º', '5º'];
+            
+            sortedTeams.forEach((team, index) => {
+                const isWinner = index === 0;
+                const html = `
+                    <div class="flex justify-between items-center p-4 rounded-xl border ${isWinner ? 'border-yellow-400 bg-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 'border-white/10 bg-white/5'}">
+                        <div class="flex items-center gap-4">
+                            <span class="text-3xl ${isWinner ? '' : 'text-gray-400 font-bold'}">${medals[index]}</span>
+                            <span class="${isWinner ? 'text-2xl font-bold text-yellow-400 font-orbitron' : 'text-xl text-gray-200'}">${team.name}</span>
+                        </div>
+                        <div class="${isWinner ? 'text-3xl text-yellow-400 font-black' : 'text-xl text-gray-400 font-bold'} font-fira">
+                            ${team.score} <span class="text-sm">pts</span>
+                        </div>
+                    </div>
+                `;
+                podiumList.insertAdjacentHTML('beforeend', html);
+            });
             
             document.getElementById('endgame-modal').classList.remove('hidden');
             
