@@ -29,13 +29,12 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Full screen 3D app */
+            overflow: hidden;
             font-family: 'Rajdhani', sans-serif;
             background: radial-gradient(circle at center, #0f051d 0%, #05010a 70%, #000000 100%);
             color: white;
         }
 
-        /* 3D Canvas Background */
         #game-canvas {
             position: absolute;
             top: 0;
@@ -45,7 +44,6 @@
             z-index: 0;
         }
 
-        /* UI Layer on top of 3D */
         #ui-layer {
             position: absolute;
             top: 0;
@@ -59,7 +57,6 @@
             justify-content: space-between;
         }
 
-        /* Re-enable pointer events for specific UI elements */
         .interactive-ui {
             pointer-events: auto;
         }
@@ -67,7 +64,6 @@
         h1, h2, h3, h4, .font-orbitron { font-family: 'Orbitron', sans-serif; }
         code, pre, .font-fira, input { font-family: 'Fira Code', monospace; }
 
-        /* Premium Cyber-Glassmorphism */
         .glass-panel {
             background: rgba(12, 6, 24, 0.88);
             backdrop-filter: blur(20px);
@@ -76,7 +72,6 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(56, 189, 248, 0.05);
         }
 
-        /* Cyber Neon Buttons */
         .btn-neon {
             position: relative;
             display: inline-flex;
@@ -133,7 +128,6 @@
             transform: translateY(-2px);
         }
 
-        /* Custom Terminal Input */
         .terminal-input {
             width: 100%;
             background: rgba(0, 0, 0, 0.75);
@@ -153,7 +147,6 @@
 
         .hidden { display: none !important; }
 
-        /* Animations */
         @keyframes pulse-glow {
             0% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.4); }
             50% { box-shadow: 0 0 35px rgba(236, 72, 153, 0.9); }
@@ -163,7 +156,6 @@
             animation: pulse-glow 2s infinite;
         }
 
-        /* Trap Shake Effect */
         @keyframes shake {
             0%, 100% { transform: translate(0, 0); }
             20%, 60% { transform: translate(-6px, 3px); }
@@ -173,7 +165,6 @@
             animation: shake 0.4s ease-in-out both;
         }
 
-        /* Glitch Effect for Wrong Answers */
         @keyframes glitchRed {
             0% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
             50% { transform: translate(-3px, 1px); }
@@ -183,7 +174,6 @@
             animation: glitchRed 0.3s ease-in-out infinite alternate;
         }
 
-        /* Pop Banner Animation */
         @keyframes popIn {
             0% { transform: scale(0.85); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -192,7 +182,6 @@
             animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        /* Scoreboard Table */
         .score-row {
             transition: all 0.25s ease;
         }
@@ -213,11 +202,9 @@
         
         <!-- TOP BAR: Ranking -->
         <div class="w-full flex justify-end items-start p-4 md:p-6 interactive-ui">
-            <!-- Scoreboard -->
             <div class="glass-panel p-4 rounded-2xl border border-cyan-500/40 min-w-[250px]">
                 <h3 class="text-center font-orbitron text-xs text-yellow-400 mb-3 tracking-widest border-b border-cyan-500/30 pb-2">RANKING DO JOGO</h3>
                 <div id="scoreboard-list" class="flex flex-col gap-2">
-                    <!-- Injected by JS -->
                 </div>
             </div>
         </div>
@@ -241,7 +228,6 @@
                 <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
                     <span class="text-cyan-400 font-orbitron font-bold text-xl" id="challenge-team-name">Equipe X</span>
                     
-                    <!-- Timer UI -->
                     <div id="challenge-timer" class="w-12 h-12 bg-black/80 rounded-full border-2 border-cyan-500 flex items-center justify-center text-xl font-bold font-orbitron text-cyan-400 shadow-[0_0_12px_rgba(56,189,248,0.4)] hidden">
                         45
                     </div>
@@ -253,16 +239,13 @@
                     Carregando desafio...
                 </h3>
 
-                <!-- Universal Hint Button -->
                 <div id="hint-button-container" class="mb-4">
                     <button onclick="useHint()" id="btn-hint" class="btn-neon text-yellow-400 border-yellow-500/50 hover:bg-yellow-500/20 text-sm">💡 Pedir Dica (-40pts)</button>
                 </div>
 
-                <!-- Hint Display Box -->
                 <div id="hint-display" class="hidden mb-6 p-4 bg-yellow-950/50 border border-yellow-500/60 rounded-xl text-yellow-200 text-sm font-fira shadow-inner">
                 </div>
 
-                <!-- Event Mode (Obstacles / Boosts) -->
                 <div id="event-mode-container" class="hidden space-y-4 text-center">
                     <div class="text-7xl mb-2" id="event-icon">💥</div>
                     <div id="event-title-banner" class="text-3xl font-black font-orbitron tracking-wider"></div>
@@ -276,7 +259,6 @@
                     <button onclick="endTurn()" class="btn-neon btn-neon-pink px-8 py-3 text-lg font-orbitron">CONTINUAR ➔</button>
                 </div>
 
-                <!-- Input mode -->
                 <div id="input-mode-container" class="hidden space-y-4">
                     <input type="text" id="challenge-input" class="terminal-input" placeholder="Digite a resposta..." autocomplete="off" spellcheck="false">
                     <div class="flex justify-end gap-4 mt-6">
@@ -284,7 +266,6 @@
                     </div>
                 </div>
 
-                <!-- True/False mode -->
                 <div id="tf-mode-container" class="hidden space-y-4">
                     <div class="grid grid-cols-2 gap-6 mt-4">
                         <button onclick="submitTFAnswer(true)" class="btn-neon btn-neon-green text-xl py-6">VERDADEIRO</button>
@@ -292,11 +273,9 @@
                     </div>
                 </div>
 
-                <!-- Result Feedback -->
                 <div id="result-feedback" class="hidden mt-6 text-center p-6 rounded-xl font-bold text-2xl font-orbitron border-2">
                 </div>
 
-                <!-- Interactive Explanation Toggle Button & Box -->
                 <div id="explanation-container" class="hidden mt-4 text-left">
                     <button onclick="toggleExplanation()" id="btn-explain" class="btn-neon text-cyan-300 border-cyan-500/50 hover:bg-cyan-500/20 text-xs w-full py-2 mb-2 flex items-center justify-center gap-2">
                         📖 EXPLICAR RESPOSTA
@@ -319,7 +298,6 @@
 
                 <h3 class="text-xl font-bold text-white mb-4 border-b border-white/20 pb-2">CLASSIFICAÇÃO GERAL</h3>
                 
-                <!-- Podium List -->
                 <div id="podium-list" class="flex flex-col gap-3 mb-8 w-full max-w-md mx-auto text-left">
                 </div>
 
@@ -345,7 +323,6 @@
 
     <!-- AUDIO ENGINE & GAME LOGIC -->
     <script>
-        // --- DATA & CONTENT WITH DETAILED EXPLANATIONS ---
         const teamsData = [
             { id: 0, name: '🟢 Data Savers', color: 0x22c55e, hex: '#22c55e', score: 0, pos: 0 },
             { id: 1, name: '🔵 Commit Clan', color: 0x3b82f6, hex: '#3b82f6', score: 0, pos: 0 },
@@ -354,90 +331,112 @@
             { id: 4, name: '👑 Mestres DB', color: 0xa855f7, hex: '#a855f7', score: 0, pos: 0 }
         ];
 
+        // --- QUESTIONS DERIVED EXCLUSIVELY FROM THE PROVIDED MATERIAL ---
         const challenges = [
             {
                 type: 'input',
-                q: "Para iniciar um lote de registros de vendas de Natal na Loja Estrela sem aplicar as alterações imediatamente no banco, qual instrução inicia este bloco de transação?",
-                answer: ["begin", "begin;"],
-                hint: "Instrução SQL que isola a sessão atual em modo de rascunho até que seja explicitamente encerrada.",
-                explanation: "O comando <b>BEGIN</b> inicia formalmente um bloco de transação. A partir deste momento, todas as alterações ficam em modo de 'rascunho' visíveis apenas para a sua própria sessão, até que sejam confirmadas com COMMIT ou descartadas com ROLLBACK."
+                q: "Qual o comando que inicia um bloco de transação agrupando várias operações para garantir as propriedades ACID na Loja Estrela?",
+                answer: ["begin", "begin;", "start transaction", "start transaction;"],
+                hint: "Comando executado antes das alterações para sair do modo autocommit e entrar em modo de rascunho.",
+                explanation: "O comando <b>BEGIN</b> (ou <i>START TRANSACTION</i>) inicia a transação. A partir dele, as alterações ficam visíveis apenas para a sessão atual em rascunho até que sejam confirmadas com COMMIT ou desfeitas com ROLLBACK."
             },
             {
                 type: 'input',
-                q: "Ao finalizar o fechamento do caixa diário da Loja Estrela, qual instrução garante a gravação definitiva e durável de todos os lançamentos?",
-                answer: ["commit", "commit;"],
-                hint: "Garante a propriedade de Durabilidade (propriedade D do ACID), consolidando as alterações no disco.",
-                explanation: "O comando <b>COMMIT</b> confirma permanentemente as operações pendentes do bloco transacional no disco. Após o COMMIT, a alteração se torna durável e fica visível para todos os outros usuários do banco."
+                q: "Ao finalizar o caixa da Loja Estrela com sucesso, qual comando torna as alterações permanentes e duráveis no disco?",
+                answer: ["commit", "commit;", "end", "end;"],
+                hint: "Instrução que encerra o bloco de transação salvando o rascunho e liberando bloqueios.",
+                explanation: "O comando <b>COMMIT</b> (ou <i>END</i>) confirma a transação corrente, tornando as alterações definitivas e visíveis para todas as outras sessões do PostgreSQL."
             },
             {
                 type: 'input',
-                q: "Se ocorrer um erro de processamento na listagem de produtos da Loja Estrela durante uma transação aberta, qual comando anula tudo o que foi alterado na sessão?",
+                q: "Se ocorrer um erro no pagamento durante uma venda na Loja Estrela, qual comando desfaz todas as alterações feitas desde o BEGIN?",
                 answer: ["rollback", "rollback;"],
-                hint: "Comando responsável por restaurar a visibilidade da tabela ao estado exatamente anterior ao bloco 'BEGIN'.",
-                explanation: "O comando <b>ROLLBACK</b> anula e descarta todas as alterações realizadas dentro da transação atual. O banco de dados retorna exatamente ao estado idêntico ao instante anterior à execução do comando BEGIN."
+                hint: "Comando equivalente a 'reversão', que descarta o rascunho da transação inteira.",
+                explanation: "O <b>ROLLBACK</b> anula a transação por completo, jogando fora todas as alterações não confirmadas e retornando o banco ao estado exatamente anterior ao BEGIN."
             },
             {
                 type: 'input',
-                q: "Em uma venda complexa com múltiplos itens na Loja Estrela, qual recurso cria um marcador intermediário para que um erro em um único item não cancele a compra inteira?",
+                q: "Para desfazer apenas a última etapa incorreta de uma venda sem cancelar os itens que já deram certo, qual marcador deve ser criado previamente?",
                 answer: ["savepoint", "savepoint;"],
-                hint: "Permite controle fino de rollback parcial dentro de uma mesma transação ativa.",
-                explanation: "O <b>SAVEPOINT</b> marca uma estaca intermediária na transação. Isso permite desfazer apenas parte do trabalho com ROLLBACK TO SAVEPOINT sem perder o que já havia sido processado com sucesso anterior."
+                hint: "Ponto de recuperação definido dentro do bloco transacional para permitir reversão parcial.",
+                explanation: "O <b>SAVEPOINT</b> cria um ponto de salvamento intermediário na transação. Com ele, é possível utilizar <i>ROLLBACK TO SAVEPOINT</i> para voltar apenas até o ponto desejado."
             },
             {
                 type: 'input',
-                q: "O operador do caixa precisa importar a tabela de fornecedores da Loja Estrela diretamente de um arquivo no computador local através do psql. Qual meta-comando ele deve executar?",
-                answer: ["\\copy", "copy", "\\copy;", "copy;"],
-                hint: "Trata-se de um utilitário do lado do cliente do psql (iniciado por caractere de escape), diferindo do comando SQL executado no servidor.",
-                explanation: "O meta-comando <b>\\copy</b> executa no lado do cliente psql. Diferente do COPY SQL puro, o \\copy lê e grava arquivos de texto/CSV direto no computador do próprio usuário."
-            },
-            {
-                type: 'input',
-                q: "Qual ferramenta em linha de comando é utilizada pelo administrador da Loja Estrela para gerar uma cópia de segurança (backup lógico) consistente de todo o banco PostgreSQL?",
-                answer: ["pg_dump", "pg dump"],
-                hint: "Utilitário nativo executado fora do SQL que extrai definições de esquema e dados em scripts ou formatos binários.",
-                explanation: "O <b>pg_dump</b> é o utilitário nativo de backup lógico do PostgreSQL. Ele tira uma foto consistente dos dados sem bloquear leituras ou escritas que estejam ocorrendo simultaneamente."
-            },
-            {
-                type: 'tf',
-                q: "Um operador da Loja Estrela executou um COMMIT após atualizar o estoque. Se ele executar ROLLBACK logo em seguida na mesma janela, o estoque voltará ao valor anterior.",
-                answer: false,
-                hint: "Analise se o ciclo de vida da transação continua ativo após a instrução de consolidação de dados.",
-                explanation: "<b>FALSO!</b> Uma vez executado o COMMIT, os dados são gravados permanentemente no banco. O ROLLBACK só funciona enquanto a transação estiver aberta (antes do COMMIT)."
-            },
-            {
-                type: 'tf',
-                q: "Em uma compra na Loja Estrela, a falha ao autorizar o pagamento no sistema bancário dispara um ROLLBACK, garantindo que o estoque reservado não seja baixado incorretamente.",
-                answer: true,
-                hint: "Avalie como a propriedade de Atomicidade (tudo ou nada) do protocolo ACID trata erros em transações financeiras.",
-                explanation: "<b>VERDADEIRO!</b> O princípio da <i>Atomicidade</i> garante que uma transação aconteça por inteiro ou não aconteça nada ('tudo ou nada'). Se o pagamento falhar, o ROLLBACK reverte a baixa no estoque automaticamente."
-            },
-            {
-                type: 'tf',
-                q: "A instrução ROLLBACK TO SAVEPOINT desfaz apenas os comandos executados após o marcador indicado, mantendo intactas as inserções bem-sucedidas anteriores.",
-                answer: true,
-                hint: "Considere se o ponto de salvamento cancela o bloco transacional por completo ou de forma pontual.",
-                explanation: "<b>VERDADEIRO!</b> O comando ROLLBACK TO SAVEPOINT cancela apenas o trecho de código executado após o ponto marcado, preservando o progresso transacional anterior até o desfecho final com o COMMIT."
-            },
-            {
-                type: 'input',
-                q: "Qual utilitário de terminal deve ser chamado para reinstalar a base de dados da Loja Estrela a partir de um arquivo de backup compilado em formato customizado (.dump)?",
-                answer: ["pg_restore", "pg restore"],
-                hint: "Ferramenta de restauração capaz de reprocessar backups binários e realizar operações concorrentes de reconstrução de tabelas.",
-                explanation: "O utilitário <b>pg_restore</b> pega os arquivos comprimidos (.dump/.dir) gerados pelo pg_dump e reconstrói o banco de dados."
-            },
-            {
-                type: 'tf',
-                q: "Arquivos no formato CSV exigem obrigatoriamente a instalação de um SGBD completo para que seu conteúdo textual possa ser inspecionado.",
-                answer: false,
-                hint: "Reflita sobre a estrutura física interna de um arquivo estruturado com delimitadores simples.",
-                explanation: "<b>FALSO!</b> O CSV (Comma-Separated Values) é um formato de texto simples e extremamente leve. Ele pode ser aberto em qualquer bloco de notas ou softwares de planilha."
-            },
-            {
-                type: 'input',
-                q: "Qual é o formato de arquivo padrão em texto plano, cujos campos são delimitados por vírgulas, amplamente utilizado para migração de relatórios na Loja Estrela?",
+                q: "Qual é o formato de arquivo de texto simples, delimitado por vírgulas, utilizado para exportar os produtos da Loja Estrela para planilhas?",
                 answer: ["csv", ".csv"],
-                hint: "Formato universal de intercâmbio de dados cujas colunas são separadas por caracteres de pontuação padrão.",
-                explanation: "<b>CSV</b> significa 'Comma-Separated Values'. É o formato padrão universal mais utilizado para migração e troca rápida de dados."
+                hint: "A sigla significa Comma-Separated Values.",
+                explanation: "O formato <b>CSV</b> (Comma-Separated Values) é leve e universal, permitindo a troca rápida de dados entre bancos de dados e softwares de planilha."
+            },
+            {
+                type: 'input',
+                q: "Qual comando SQL do PostgreSQL copia os dados da tabela produtos diretamente para um arquivo no servidor da Loja Estrela?",
+                answer: ["copy", "copy to", "copy;"],
+                hint: "Comando SQL nativo de cópia que utiliza as cláusulas TO ou FROM.",
+                explanation: "O comando <b>COPY</b> (ex: <i>COPY produtos TO 'caminho.csv' WITH (FORMAT csv, HEADER true)</i>) exporta ou importa dados diretamente pelo servidor."
+            },
+            {
+                type: 'tf',
+                q: "Após executar um COMMIT no estoque da Loja Estrela, é possível usar o comando ROLLBACK em seguida para recuperar os valores antigos.",
+                answer: false,
+                hint: "Pense sobre a irreversibilidade do encerramento da transação.",
+                explanation: "<b>FALSO!</b> O COMMIT torna as alterações definitivas e permanentes. Depois dele, o ROLLBACK não tem mais efeito sobre a transação finalizada."
+            },
+            {
+                type: 'tf',
+                q: "No PostgreSQL, o comando START TRANSACTION possui funcionalidade equivalente ao comando BEGIN.",
+                answer: true,
+                hint: "Lembre-se das formas equivalentes de iniciar um bloco transacional.",
+                explanation: "<b>VERDADEIRO!</b> <i>START TRANSACTION</i> e <i>BEGIN</i> são comandos totalmente equivalentes para iniciar um bloco de transação."
+            },
+            {
+                type: 'tf',
+                q: "Se uma linha de um arquivo CSV contiver um erro de tipo de dado durante o COPY FROM, o PostgreSQL ignora apenas aquela linha e importa todo o restante do arquivo.",
+                answer: false,
+                hint: "Reflita sobre o comportamento do COPY quanto a erros e validações.",
+                explanation: "<b>FALSO!</b> No <i>COPY FROM</i>, se uma única linha do arquivo apresentar erro, a importação inteira falha e nenhuma linha é inserida na tabela."
+            },
+            {
+                type: 'tf',
+                q: "O comando SAVEPOINT só pode ser utilizado dentro de um bloco de transação aberto por um BEGIN.",
+                answer: true,
+                hint: "Avalie se o ponto de salvamento é dependente da existência de uma transação ativa.",
+                explanation: "<b>VERDADEIRO!</b> O SAVEPOINT não é independente; ele só existe dentro de uma transação previamente iniciada com BEGIN."
+            },
+            {
+                type: 'tf',
+                q: "No pgAdmin 4, se a opção auto rollback on error estiver ligada, um erro desfaz a transação imediatamente, impedindo a demonstração do ROLLBACK TO SAVEPOINT.",
+                answer: true,
+                hint: "Lembre-se das recomendações de configuração do Query Tool para os testes com SAVEPOINT.",
+                explanation: "<b>VERDADEIRO!</b> Para demonstrar o SAVEPOINT, a opção <i>auto rollback on error</i> deve estar desligada nas Execute options do Query Tool do pgAdmin."
+            },
+            {
+                type: 'input',
+                q: "Qual propriedade das transações ACID é garantida pelo ROLLBACK ao assegurar que a operação ocorra 'tudo ou nada'?",
+                answer: ["atomicidade", "atomicidade;"],
+                hint: "A letra 'A' do acrônimo ACID.",
+                explanation: "A <b>Atomicidade</b> garante que a transação seja tratada como uma unidade indivisível: todas as operações são concluídas com sucesso ou nenhuma é gravada."
+            },
+            {
+                type: 'input',
+                q: "Qual propriedade do ACID garante que, após o COMMIT, os dados gravados na Loja Estrela sobreviverão mesmo se o servidor cair?",
+                answer: ["durabilidade", "durabilidade;"],
+                hint: "A letra 'D' do acrônimo ACID.",
+                explanation: "A <b>Durabilidade</b> garante que as alterações confirmadas pelo COMMIT fiquem salvas permanentemente em disco rígido/storage."
+            },
+            {
+                type: 'tf',
+                q: "A exportação em formato CSV gera um arquivo contendo tanto os dados das tabelas quanto as restrições e chaves primárias do banco.",
+                answer: false,
+                hint: "Avalie o que o arquivo de texto CSV é capaz de armazenar.",
+                explanation: "<b>FALSO!</b> O arquivo CSV armazena estritamente os dados brutos em texto, sem carregar a estrutura do banco (tipos, chaves primárias ou restrições)."
+            },
+            {
+                type: 'tf',
+                q: "O comando ROLLBACK desfaz o consumo de valores das colunas SERIAL (autoincremento), evitando que fiquem números pulados na tabela.",
+                answer: false,
+                hint: "Considere os cuidados listados na teoria sobre o comportamento de sequências.",
+                explanation: "<b>FALSO!</b> O ROLLBACK não desfaz a contagem de sequências. Por isso, a coluna de id SERIAL pode apresentar saltos no autoincremento."
             }
         ];
 
@@ -539,13 +538,11 @@
             camera.position.set(0, 32, 42);
             camera.lookAt(0, 0, 2);
 
-            // Optimized Renderer Configuration
             renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: true, powerPreference: "high-performance" });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(1.0);
             renderer.shadowMap.enabled = false;
 
-            // Simplified Ambient & Directional Lighting
             const ambient = new THREE.AmbientLight(0xffffff, 0.7);
             scene.add(ambient);
             
@@ -571,7 +568,6 @@
 
         function buildBoard() {
             const tileGeo = new THREE.BoxGeometry(3.2, 0.8, 3.2);
-            
             let cx = -15, cz = -15;
             let dirX = 1;
             
@@ -869,7 +865,6 @@
                     trackMovingPawn(pawnMesh.position);
                 }
 
-                // Finish line check - end game immediately without adding bonus here (bonus calculated at endgame)
                 if (team.pos >= BOARD_SIZE - 1) {
                     team.pos = BOARD_SIZE - 1;
                     updateScoreboard();
@@ -883,7 +878,7 @@
                         if (pawnMesh) create3DExplosion(pawnMesh.position);
                         triggerEventModal('trap', 'FALHA DE ENERGIA!', 'O servidor reiniciou e corrompeu a transação!', -50);
                     } else if (tileType === 'boost') {
-                        triggerEventModal('boost', 'BACKUP CONCLUÍDO!', 'Exportação rápida finalizada com sucesso via \\copy!', 50);
+                        triggerEventModal('boost', 'BACKUP CONCLUÍDO!', 'Exportação rápida finalizada com sucesso via COPY TO!', 50);
                     } else {
                         triggerChallenge();
                     }
@@ -961,7 +956,6 @@
                 setTimeout(() => { graphicBar.style.width = "100%"; }, 100);
             }
 
-            // Cumulative continuous point addition
             teamsData[currentTeamIndex].score += pointDelta;
             updateScoreboard();
             modal.classList.remove('hidden');
@@ -1066,7 +1060,6 @@
 
             if (isCorrect) {
                 playSound('correct');
-                // Continuous score accumulation
                 teamsData[currentTeamIndex].score += currentPointsVal;
                 updateScoreboard();
 
@@ -1155,7 +1148,6 @@
             clearInterval(countdownTimer);
             playSound('win');
 
-            // Award the 50 points bonus ONLY now at the end of the game to the first place finisher
             if (winnerId !== undefined && winnerId !== null) {
                 const winningTeam = teamsData.find(t => t.id === winnerId);
                 if (winningTeam) {
